@@ -3,302 +3,353 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Arbuz Warehouse Training</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <title>Arbuz WMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
-        /* --- 🎨 ФИРМЕННЫЙ СТИЛЬ --- */
+        /* --- НАСТРОЙКИ UI (Zebra TC26 Style) --- */
         :root {
-            --primary-green: #00A046; 
-            --accent-red: #E21E2C; 
-            --text-main: #1D1D1D;
-            --text-secondary: #707070;
-            --bg-body: #FFFFFF;
-            --bg-card: #F4F6F8;
-            --border-radius: 16px;
+            --arbuz-green: #00A046;
+            --arbuz-red: #E21E2C;
+            --dark-ui: #212121; /* Цвет корпуса Zebra */
+            --screen-bg: #F5F5F5;
+            --border-color: #E0E0E0;
         }
 
         body {
-            margin: 0; padding: 0; background-color: var(--bg-body);
-            font-family: 'Inter', sans-serif; color: var(--text-main);
-            -webkit-font-smoothing: antialiased; user-select: none;
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark-ui); /* Темный фон вокруг экрана (корпус) */
+            font-family: 'Roboto', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
         }
 
-        /* --- ЭКРАНЫ --- */
-        .screen {
-            display: none; min-height: 100vh; padding: 24px 20px; box-sizing: border-box;
-            flex-direction: column; align-items: center; padding-top: 40px;
+        /* Имитация экрана Zebra TC26 (если открыть на пк) */
+        .device-screen {
+            background: var(--screen-bg);
+            width: 100%;
+            height: 100%;
+            max-width: 480px; /* Ограничение ширины как у ТСД */
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
-        .screen.active { display: flex; animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- ОБЩИЕ ЭЛЕМЕНТЫ --- */
-        .header-logo { font-size: 32px; font-weight: 900; color: var(--primary-green); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; }
-        .header-logo span { color: var(--accent-red); margin-right: 8px; }
-        h1 { font-size: 26px; font-weight: 800; text-align: center; margin: 0 0 12px 0; line-height: 1.2; }
-        p.text { font-size: 16px; line-height: 1.5; color: var(--text-secondary); text-align: center; margin-bottom: 32px; max-width: 340px; }
+        /* --- СТАТУС БАР (Android) --- */
+        .status-bar {
+            background: #00A046; /* Зеленый верх, как в приложении Arbuz */
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        /* --- КОНТЕНТ --- */
+        .content {
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        /* Экраны */
+        .screen { display: none; flex-direction: column; height: 100%; }
+        .screen.active { display: flex; animation: fadeIn 0.2s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Заголовки */
+        h1 { margin: 0 0 10px 0; font-size: 22px; color: #333; }
+        p { color: #666; font-size: 16px; line-height: 1.4; margin-bottom: 20px; }
+
+        /* Карточки */
+        .card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Кнопки (Material Design) */
+        .btn {
+            background: var(--arbuz-green);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 100%;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .btn:active { background: #008f3e; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .btn-outline { background: white; color: #555; border: 1px solid #ccc; margin-top: 10px; }
+
+        /* --- ИНТЕРФЕЙС ЗАДАНИЯ (РАБОЧИЙ) --- */
+        .task-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;
+        }
+        .task-id { font-weight: bold; color: #555; }
         
-        .btn-primary {
-            background: var(--primary-green); color: #fff; border: none; width: 100%; padding: 18px;
-            font-size: 18px; border-radius: var(--border-radius); font-weight: 700; cursor: pointer;
-            margin-top: auto; box-shadow: 0 4px 15px rgba(0, 160, 70, 0.3); margin-bottom: 20px;
+        /* БОЛЬШОЙ АДРЕС */
+        .target-location {
+            background: #E8F5E9;
+            border-left: 5px solid var(--arbuz-green);
+            padding: 20px;
+            margin-bottom: 20px;
         }
-        .btn-primary:active { transform: scale(0.98); background: #008f3e; }
+        .target-label { font-size: 12px; text-transform: uppercase; color: #555; margin-bottom: 5px; }
+        .target-value { font-size: 36px; font-weight: 700; color: #222; font-family: monospace; letter-spacing: -1px; }
 
-        /* --- СТИЛИ ТЕОРИИ --- */
-        .zone-card { display: flex; align-items: center; background: var(--bg-card); padding: 16px; border-radius: var(--border-radius); margin-bottom: 12px; width: 100%; }
-        .zone-icon { font-size: 30px; margin-right: 16px; width: 40px; text-align: center; }
-        .zone-info b { display: block; margin-bottom: 4px; font-size: 17px; }
-        .zone-info span { font-size: 14px; color: var(--text-secondary); }
-        .address-box { background: #E8F5E9; border: 2px solid var(--primary-green); padding: 16px 10px; border-radius: 16px; margin-bottom: 24px; text-align: center; width: 100%; }
-        .address-code { font-family: monospace; font-size: 26px; font-weight: 700; color: var(--text-main); letter-spacing: 1px; }
-        .metaphor-list { width: 100%; display: flex; flex-direction: column; gap: 12px; }
-        .metaphor-item { display: flex; align-items: center; background: var(--bg-card); padding: 12px 16px; border-radius: 12px; font-size: 15px; }
-        .metaphor-badge { color: #fff; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-family: monospace; min-width: 35px; text-align: center; margin-right: 12px; }
-        .badge-1 { background: #FF5722; } .badge-2 { background: #2196F3; } .badge-3 { background: #9C27B0; } .badge-4 { background: #E91E63; } .badge-5 { background: var(--primary-green); }
-        .metaphor-emoji { margin-left: auto; font-size: 20px; }
-
-        /* --- 💡 СТИЛИ ПОДСКАЗКИ (MODAL) --- */
-        .hint-btn {
-            background: #E3F2FD; color: #1976D2; border: none; padding: 12px 20px;
-            border-radius: 12px; font-weight: 600; font-size: 15px; cursor: pointer;
-            margin-bottom: 20px; display: inline-flex; align-items: center; gap: 8px;
+        /* ПОЛЕ ВВОДА (КУДА ТСД ПЕЧАТАЕТ) */
+        .input-group { position: relative; margin-bottom: 20px; }
+        .scan-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-family: monospace;
+            outline: none;
         }
+        .scan-input:focus { border-color: var(--arbuz-green); background: #fff; }
+        .scan-input::placeholder { color: #bbb; }
         
-        .modal-overlay {
+        .scan-status {
+            font-size: 12px; color: #777; margin-top: 5px; display: flex; align-items: center; gap: 5px;
+        }
+        .blink { animation: blinker 1.5s linear infinite; color: var(--arbuz-green); font-weight: bold; }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        /* КНОПКА ПОДСКАЗКИ */
+        .hint-link {
+            color: #1976D2; text-decoration: none; font-weight: 500; font-size: 14px;
+            display: inline-flex; align-items: center; gap: 5px; cursor: pointer;
+            padding: 10px 0;
+        }
+
+        /* Всплывающее окно (Bottom Sheet style for Android) */
+        .bottom-sheet {
+            position: fixed; bottom: -100%; left: 0; width: 100%;
+            background: white; border-top-left-radius: 16px; border-top-right-radius: 16px;
+            padding: 24px; box-sizing: border-box;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+            transition: bottom 0.3s ease-out; z-index: 100;
+        }
+        .bottom-sheet.active { bottom: 0; }
+        .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 100; display: none;
-            align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;
+            background: rgba(0,0,0,0.5); z-index: 90; display: none;
         }
-        .modal-overlay.active { display: flex; animation: fadeIn 0.2s; }
-        
-        .modal-content {
-            background: white; width: 100%; max-width: 320px; padding: 24px;
-            border-radius: 20px; text-align: left; position: relative;
-        }
-        .modal-close { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: #999; }
+        .overlay.active { display: block; }
 
-        /* --- 📟 СТИЛИ ТСД (ТЕРМИНАЛ) --- */
-        #screen-scanner {
-            background: #111; padding: 0; justify-content: center; position: relative;
-            font-family: 'Roboto Mono', monospace; /* Технический шрифт */
+        /* Кнопка "ТЕСТ" (для тебя, чтобы проверить без сканера) */
+        .dev-btn {
+            position: absolute; bottom: 10px; right: 10px; opacity: 0.3; font-size: 10px;
         }
-        
-        /* Интерфейс внутри камеры */
-        .tsd-interface {
-            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
-            display: flex; flex-direction: column; justify-content: space-between;
-            padding: 20px; box-sizing: border-box; z-index: 10;
-            pointer-events: none; /* Чтобы клики проходили сквозь текст */
-        }
-
-        .tsd-top-bar {
-            display: flex; justify-content: space-between; color: #00ff00; font-size: 14px;
-            text-shadow: 0 0 5px rgba(0,255,0,0.5);
-        }
-
-        .tsd-center-crosshair {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 280px; height: 180px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        /* Уголки прицела */
-        .tsd-center-crosshair::before, .tsd-center-crosshair::after {
-            content: ''; position: absolute; width: 20px; height: 20px;
-            border-color: #E21E2C; border-style: solid;
-        }
-        .tsd-center-crosshair::before { top: -2px; left: -2px; border-width: 3px 0 0 3px; }
-        .tsd-center-crosshair::after { bottom: -2px; right: -2px; border-width: 0 3px 3px 0; }
-
-        .tsd-laser-line {
-            width: 90%; height: 2px; background: #E21E2C;
-            box-shadow: 0 0 8px #E21E2C;
-            animation: pulseLaser 1s infinite;
-        }
-        @keyframes pulseLaser { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
-
-        .tsd-status {
-            color: #fff; background: rgba(0,0,0,0.5); padding: 5px 10px;
-            border-radius: 4px; font-size: 12px; position: absolute; bottom: -30px;
-        }
-
-        /* Кнопка сканирования ТСД */
-        .btn-tsd-scan {
-            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-            width: 200px; height: 60px;
-            background: #333; color: white;
-            border: 2px solid #555; border-radius: 8px;
-            font-family: 'Roboto Mono', monospace; font-size: 18px; font-weight: 700;
-            cursor: pointer; z-index: 20;
-            box-shadow: 0 4px 0 #111;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .btn-tsd-scan:active { transform: translateX(-50%) translateY(4px); box-shadow: none; background: #222; }
 
     </style>
 </head>
 <body>
 
-    <div id="screen-1" class="screen active">
-        <div class="header-logo"><span>🍉</span>arbuz.kz</div>
-        <h1>Привет, стажёр!</h1>
-        <p class="text">Добро пожаловать. Давай научимся работать с ТСД и адресами склада.</p>
-        <button class="btn-primary" onclick="goToScreen(2)">Начать обучение</button>
-    </div>
+    <div class="device-screen">
+        <div class="status-bar">
+            <span>Arbuz WMS</span>
+            <span id="clock">09:41</span>
+        </div>
 
-    <div id="screen-2" class="screen">
-        <h1>Зоны склада</h1>
-        <div class="zone-card"><div class="zone-icon">🍝</div><div class="zone-info"><b>B — Бакалея</b><span>Обычная температура.</span></div></div>
-        <div class="zone-card"><div class="zone-icon">❄️</div><div class="zone-info"><b>F — Фреш</b><span>Холодильник (+2°C).</span></div></div>
-        <div class="zone-card"><div class="zone-icon">🍦</div><div class="zone-info"><b>G — ГМЗ</b><span>Гастроном и молочка.</span></div></div>
-        <button class="btn-primary" onclick="goToScreen(3)">Понятно</button>
-    </div>
+        <div class="content">
+            
+            <div id="screen-login" class="screen active">
+                <div style="margin-top: 40px; text-align: center;">
+                    <span style="font-size: 40px;">🍉</span>
+                    <h1 style="margin-top: 10px;">Arbuz Warehouse</h1>
+                    <p>Обучающий режим</p>
+                </div>
 
-    <div id="screen-3" class="screen">
-        <h1>Адрес ячейки</h1>
-        <div class="address-box">
-            <div class="address-code">
-                <span style="color:#FF5722">B1</span>-<span style="color:#2196F3">01</span>-<span style="color:#9C27B0">01</span>-<span style="color:#E91E63">A</span>-<span style="color:var(--primary-green)">01</span>
+                <div class="card" style="margin-top: 20px;">
+                    <p style="margin-bottom: 10px; font-weight: 600;">Доступные задания:</p>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="background: #E8F5E9; color: var(--arbuz-green); padding: 5px 10px; border-radius: 4px; font-weight: bold;">1</div>
+                        <div>Поиск ячейки (Обучение)</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: auto;">
+                    <button class="btn" onclick="goToScreen('task')">НАЧАТЬ СМЕНУ</button>
+                </div>
             </div>
+
+            <div id="screen-task" class="screen">
+                <div class="task-header">
+                    <span class="task-id">ЗАДАНИЕ #101</span>
+                    <span style="color: var(--arbuz-green); font-weight: bold;">АКТИВНО</span>
+                </div>
+
+                <p style="margin-bottom: 10px;">Направляйтесь к ячейке и отсканируйте ШК:</p>
+
+                <div class="target-location">
+                    <div class="target-label">ЦЕЛЕВАЯ ЯЧЕЙКА</div>
+                    <div class="target-value">B1-02-05-A-01</div>
+                </div>
+
+                <div class="hint-link" onclick="openHint()">
+                    <span style="font-size: 18px;">💡</span> Расшифровать адрес
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+                <div class="input-group">
+                    <label style="font-size: 12px; font-weight: bold; color: #555;">ШТРИХКОД ЯЧЕЙКИ</label>
+                    
+                    <input type="text" id="barcode-input" class="scan-input" placeholder="" autocomplete="off">
+                    
+                    <div class="scan-status">
+                        <span class="blink">●</span> ОЖИДАНИЕ СКАНИРОВАНИЯ...
+                    </div>
+                </div>
+
+                <button class="dev-btn" onclick="devSimulateScan()">[DEV: Test Scan]</button>
+            </div>
+
+            <div id="screen-success" class="screen" style="justify-content: center; align-items: center; text-align: center;">
+                <div style="font-size: 60px; color: var(--arbuz-green); margin-bottom: 20px;">✅</div>
+                <h1>Ячейка подтверждена</h1>
+                <p>Адрес верный. Товар найден.</p>
+                
+                <div class="card" style="width: 100%; text-align: left;">
+                    <div>Время выполнения: <b id="result-time">0.0с</b></div>
+                    <div>Баллы: <b>+1</b></div>
+                </div>
+
+                <button class="btn" style="margin-top: 20px;" onclick="location.reload()">НОВОЕ ЗАДАНИЕ</button>
+            </div>
+
         </div>
-        <div class="metaphor-list">
-            <div class="metaphor-item"><div class="metaphor-badge badge-1">B1</div><div><b>Город</b><br><small>Секция склада</small></div><div class="metaphor-emoji">🏙️</div></div>
-            <div class="metaphor-item"><div class="metaphor-badge badge-2">01</div><div><b>Улица</b><br><small>Ряд</small></div><div class="metaphor-emoji">🛣️</div></div>
-            <div class="metaphor-item"><div class="metaphor-badge badge-3">01</div><div><b>Дом</b><br><small>Стеллаж</small></div><div class="metaphor-emoji">🏢</div></div>
-            <div class="metaphor-item"><div class="metaphor-badge badge-5">01</div><div><b>Квартира</b><br><small>Позиция</small></div><div class="metaphor-emoji">🚪</div></div>
-        </div>
-        <button class="btn-primary" onclick="goToScreen(4)">Запомнил!</button>
     </div>
 
-    <div id="screen-4" class="screen">
-        <div style="font-size: 60px; margin-top: 40px; margin-bottom: 20px;">📟</div>
-        <h1>Возьми ТСД</h1>
-        <p class="text">Сейчас мы будем работать со сканером. <br>Найди ячейку по заданию и нажми кнопку сканирования на экране.</p>
-        <button class="btn-primary" onclick="startGameFlow()">Получить задание</button>
-    </div>
-
-
-    <div id="screen-task" class="screen">
-        <div class="header-logo"><span>🍉</span>arbuz.kz</div>
-        <h1>Задание #1</h1>
-        <p class="text">Найди и отсканируй ячейку:</p>
-
-        <div style="background: #FFF3E0; border: 2px dashed #FF9800; padding: 20px; border-radius: 20px; text-align: center; width: 100%; margin-bottom: 20px;">
-            <div style="font-size: 12px; text-transform: uppercase; color: #E65100; margin-bottom: 5px;">Цель поиска</div>
-            <div style="font-family: monospace; font-size: 32px; font-weight: 800; color: #222;">B1-02-05-A-01</div>
-        </div>
+    <div class="overlay" id="overlay" onclick="closeHint()"></div>
+    <div class="bottom-sheet" id="hint-sheet">
+        <h3 style="margin-top: 0;">Структура адреса</h3>
         
-        <button class="hint-btn" onclick="openHint()">
-            💡 Нужна подсказка?
-        </button>
-
-        <button class="btn-primary" onclick="startTimerAndScan()">🚀 Начать поиск</button>
-    </div>
-
-    <div id="hint-modal" class="modal-overlay" onclick="closeHint()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="modal-close" onclick="closeHint()">&times;</div>
-            <h3 style="margin-top:0;">Как найти B1?</h3>
-            <p style="line-height: 1.6; color: #444;">
-                <b>B</b> — это отдел <b>Бакалея</b> (Dry).<br><br>
-                <b>B1</b> — означает, что это Бакалея на <b>1-м этаже</b>.<br><br>
-                👀 Ищи под потолком большие вывески с буквой <b>B</b>.
-            </p>
-            <button class="btn-primary" style="margin-bottom:0; padding: 12px;" onclick="closeHint()">Понятно</button>
+        <div style="display: flex; margin-bottom: 10px; align-items: center;">
+            <span style="background: #FF5722; color: white; padding: 2px 6px; border-radius: 4px; margin-right: 10px; font-family: monospace;">B1</span>
+            <span><b>Секция</b> (Бакалея, 1 этаж)</span>
         </div>
-    </div>
-
-
-    <div id="screen-scanner" class="screen">
-        <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle, #333 0%, #000 90%);"></div>
-
-        <div class="tsd-interface">
-            <div class="tsd-top-bar">
-                <span>ARBUZ_WMS_V2.0</span>
-                <span>BAT: 98% 🔋</span>
-            </div>
-
-            <div class="tsd-center-crosshair">
-                <div class="tsd-laser-line"></div>
-                <div class="tsd-status">WAITING FOR BARCODE...</div>
-            </div>
-
-            <div></div>
+        <div style="display: flex; margin-bottom: 10px; align-items: center;">
+            <span style="background: #2196F3; color: white; padding: 2px 6px; border-radius: 4px; margin-right: 10px; font-family: monospace;">02</span>
+            <span><b>Ряд</b> (Аллея)</span>
+        </div>
+        <div style="display: flex; margin-bottom: 10px; align-items: center;">
+            <span style="background: #9C27B0; color: white; padding: 2px 6px; border-radius: 4px; margin-right: 10px; font-family: monospace;">05</span>
+            <span><b>Стеллаж</b> (Шкаф)</span>
+        </div>
+        <div style="display: flex; margin-bottom: 10px; align-items: center;">
+            <span style="background: #E91E63; color: white; padding: 2px 6px; border-radius: 4px; margin-right: 10px; font-family: monospace;">A</span>
+            <span><b>Ярус</b> (Полка)</span>
+        </div>
+         <div style="display: flex; margin-bottom: 10px; align-items: center;">
+            <span style="background: var(--arbuz-green); color: white; padding: 2px 6px; border-radius: 4px; margin-right: 10px; font-family: monospace;">01</span>
+            <span><b>Позиция</b> на стеллаже</span>
         </div>
 
-        <button class="btn-tsd-scan" onclick="simulateScanSuccess()">
-            <span style="color: #E21E2C;">◉</span> SCAN
-        </button>
-        
-        <div style="position: absolute; top: 20px; right: 20px; color: #777; font-weight: 600; cursor: pointer; z-index: 30;" onclick="goToScreen('task')">ОТМЕНА</div>
-    </div>
-
-
-    <div id="screen-result" class="screen">
-        <div style="font-size: 80px; margin-top: 20px; margin-bottom: 10px;">✅</div>
-        <h1 style="color: var(--primary-green);">Успех!</h1>
-        <p class="text">Ячейка найдена и отсканирована.</p>
-
-        <div style="display: flex; gap: 20px; width: 100%; margin-bottom: 20px;">
-            <div style="background:var(--bg-card); padding:15px; border-radius:12px; flex:1; text-align:center;">
-                <span style="font-size:24px; font-weight:800; color:var(--primary-green);">1</span>
-                <span style="font-size:12px; color:#777; display:block;">Балл</span>
-            </div>
-            <div style="background:var(--bg-card); padding:15px; border-radius:12px; flex:1; text-align:center;">
-                <span id="time-display" style="font-size:24px; font-weight:800; color:var(--primary-green);">0.0с</span>
-                <span style="font-size:12px; color:#777; display:block;">Время</span>
-            </div>
-        </div>
-
-        <button class="btn-primary" onclick="alert('Отлично! Ты готов к работе.')">Завершить</button>
-        <button style="background:none; border:none; color:#777; padding:10px; width:100%;" onclick="startGameFlow()">Повторить</button>
+        <button class="btn btn-outline" onclick="closeHint()">ЗАКРЫТЬ</button>
     </div>
 
     <script>
-        // --- ЛОГИКА ---
+        // ЧАСЫ В СТАТУС БАРЕ
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }, 1000);
+
+        // ПЕРЕМЕННЫЕ
         let startTime;
-        
-        function goToScreen(idOrName) {
-            window.scrollTo(0,0);
+        const targetBarcode = "B1-02-05-A-01";
+        const inputField = document.getElementById('barcode-input');
+
+        // НАВИГАЦИЯ
+        function goToScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            let targetId = typeof idOrName === 'number' || !isNaN(idOrName) ? 'screen-' + idOrName : idOrName;
-            if (!targetId.startsWith('screen-')) targetId = 'screen-' + targetId;
-            const el = document.getElementById(targetId);
-            if(el) el.classList.add('active');
+            document.getElementById('screen-' + id).classList.add('active');
+
+            if (id === 'task') {
+                startTime = Date.now();
+                // Фокус на поле ввода для сканера
+                setTimeout(() => {
+                    inputField.focus();
+                }, 500);
+            }
         }
 
-        // Подсказка
-        function openHint() { document.getElementById('hint-modal').classList.add('active'); }
-        function closeHint() { document.getElementById('hint-modal').classList.remove('active'); }
+        // ЛОГИКА СКАНИРОВАНИЯ (ДЛЯ ZEBRA)
+        // Zebra обычно отправляет нажатие клавиши Enter после ввода штрихкода
+        inputField.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                checkBarcode(this.value);
+            }
+        });
+        
+        // Чтобы клавиатура не вылезала на экране (если есть такая настройка на ТСД),
+        // иногда используют input readonly, но тогда события могут не приходить.
+        // Оставим обычный input, на ТСД Zebra DataWedge настроен как правило корректно.
+        
+        // Если сканер настроен как "Intent", код будет другой. 
+        // Но для веб-приложений обычно используют режим "Keystroke output" (эмуляция клавиатуры).
 
-        function startGameFlow() { goToScreen('task'); }
+        // Поддерживаем фокус в поле всегда (чтобы сканер сработал, даже если кликнули мимо)
+        document.body.addEventListener('click', () => {
+            if(document.getElementById('screen-task').classList.contains('active')) {
+                inputField.focus();
+            }
+        });
 
-        function startTimerAndScan() {
-            startTime = Date.now();
-            goToScreen('scanner');
-        }
+        function checkBarcode(code) {
+            // Убираем пробелы и лишние символы
+            const cleanCode = code.trim();
 
-        function simulateScanSuccess() {
-            // Анимация нажатия
-            const btn = document.querySelector('.btn-tsd-scan');
-            btn.style.background = "#E21E2C"; // Красный при нажатии
-            btn.style.borderColor = "#fff";
-            
-            setTimeout(() => {
+            if (cleanCode === targetBarcode) {
                 const endTime = Date.now();
                 const totalTime = ((endTime - startTime) / 1000).toFixed(1);
-                
-                document.getElementById('time-display').innerText = totalTime + 'с';
-                goToScreen('result');
-                
-                // Сброс стиля кнопки
-                btn.style.background = "#333";
-                btn.style.borderColor = "#555";
-            }, 400); // Быстрый отклик ТСД
+                document.getElementById('result-time').innerText = totalTime + 'с';
+                goToScreen('success');
+            } else {
+                alert("❌ ОШИБКА! Отсканировано: " + cleanCode + "\nНужно: " + targetBarcode);
+                inputField.value = ""; // Очистить поле
+                inputField.focus();
+            }
         }
+
+        // КНОПКА ПОДСКАЗКИ
+        function openHint() {
+            document.getElementById('overlay').classList.add('active');
+            document.getElementById('hint-sheet').classList.add('active');
+        }
+        function closeHint() {
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('hint-sheet').classList.remove('active');
+            inputField.focus(); // Вернуть фокус на сканер
+        }
+
+        // СИМУЛЯЦИЯ (ДЛЯ ТЕСТА БЕЗ ТСД)
+        function devSimulateScan() {
+            inputField.value = targetBarcode;
+            checkBarcode(targetBarcode);
+        }
+
     </script>
 </body>
 </html>
