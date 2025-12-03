@@ -11,8 +11,8 @@
         :root {
             --arbuz-green: #00A046;
             --arbuz-red: #E21E2C;
-            --dark-ui: #212121; /* Корпус сканера */
-            --screen-bg: #F5F5F5; /* Экран сканера */
+            --dark-ui: #212121;
+            --screen-bg: #F5F5F5;
         }
 
         body {
@@ -27,7 +27,7 @@
             max-width: 480px; display: flex; flex-direction: column; position: relative;
         }
 
-        /* Статус бар (как на телефоне) */
+        /* Статус бар */
         .status-bar {
             background: var(--arbuz-green); color: white; padding: 8px 16px;
             font-size: 13px; display: flex; justify-content: space-between; align-items: center; font-family: 'Roboto', sans-serif;
@@ -39,7 +39,7 @@
         .screen.active { display: flex; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Тексты (Дружелюбные) */
+        /* Тексты */
         h1 { margin: 0 0 10px 0; font-size: 24px; font-weight: 800; color: #222; text-align: center; }
         p { color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 24px; text-align: center; }
 
@@ -60,13 +60,13 @@
         }
         .btn:active { transform: scale(0.98); }
 
-        /* Цветные бейджи для адреса */
+        /* Бейджи адреса */
         .addr-badge {
             color: white; padding: 4px 8px; border-radius: 6px; font-family: monospace;
             font-weight: bold; margin-right: 12px; min-width: 32px; text-align: center;
         }
 
-        /* ПОЛЕ ВВОДА (СКАНЕР) */
+        /* Поле ввода */
         .target-box {
             background: #E8F5E9; border: 2px dashed var(--arbuz-green); border-radius: 16px;
             padding: 20px; text-align: center; margin-bottom: 20px;
@@ -79,9 +79,7 @@
         }
         .scan-input:focus { border-color: var(--arbuz-green); background: #fff; }
         
-        .scan-status {
-            font-size: 13px; color: #888; margin-top: 8px; text-align: center;
-        }
+        .scan-status { font-size: 13px; color: #888; margin-top: 8px; text-align: center; }
 
         /* Модалка */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 90; display: none; }
@@ -110,48 +108,48 @@
                 <div style="text-align: center; margin-top: 30px;">
                     <div style="font-size: 60px; margin-bottom: 10px;">🍉</div>
                     <h1>Привет, стажёр!</h1>
-                    <p>Добро пожаловать в семью Arbuz! <br>Давай быстренько научимся пользоваться этим сканером.</p>
+                    <p>Добро пожаловать в команду Arbuz! <br>Давай научимся работать со сканером и понимать адреса.</p>
                 </div>
                 
                 <div class="card">
-                    <div style="font-weight: 700; margin-bottom: 10px; color: #333;">Твоя миссия на сегодня:</div>
-                    <div style="margin-bottom: 6px;">1️⃣ Разобраться в зонах склада</div>
-                    <div style="margin-bottom: 6px;">2️⃣ Понять адреса (игра в Города)</div>
-                    <div>3️⃣ Найти реальную ячейку</div>
+                    <div style="font-weight: 700; margin-bottom: 10px; color: #333;">План обучения:</div>
+                    <div style="margin-bottom: 6px;">1️⃣ Изучить зоны склада</div>
+                    <div style="margin-bottom: 6px;">2️⃣ Разобрать адрес ячейки</div>
+                    <div>3️⃣ Найти реальный товар</div>
                 </div>
 
                 <button class="btn" onclick="goToScreen('zones')">Поехали! 🚀</button>
             </div>
 
             <div id="screen-zones" class="screen">
-                <h1>Где что лежит?</h1>
-                <p>Наш склад — как огромный холодильник, только с отделами:</p>
+                <h1>Зоны хранения</h1>
+                <p>Наш склад поделен на 3 температурные зоны:</p>
 
                 <div class="card">
                     <div class="card-row">
                         <div class="card-icon">🍝</div>
-                        <div><b>B — Бакалея</b><br><span style="font-size:13px; color:#777;">Макароны, крупы (Тепло)</span></div>
+                        <div><b>B — Бакалея</b><br><span style="font-size:13px; color:#777;">Обычная температура (Dry)</span></div>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-row">
                         <div class="card-icon">❄️</div>
-                        <div><b>F — Фреш</b><br><span style="font-size:13px; color:#777;">Овощи, фрукты (Холодно)</span></div>
+                        <div><b>F — Фреш</b><br><span style="font-size:13px; color:#777;">Холодильник +2°C (Fresh)</span></div>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-row">
                         <div class="card-icon">🍦</div>
-                        <div><b>G — ГМЗ</b><br><span style="font-size:13px; color:#777;">Молочка, сыры (Прохладно)</span></div>
+                        <div><b>G — ГМЗ</b><br><span style="font-size:13px; color:#777;">Гастроном и молочка</span></div>
                     </div>
                 </div>
 
-                <button class="btn" onclick="goToScreen('address')">Ясно, дальше! 👉</button>
+                <button class="btn" onclick="goToScreen('address')">Дальше 👉</button>
             </div>
 
             <div id="screen-address" class="screen">
                 <h1>Как читать адрес?</h1>
-                <p>Не пугайся цифр! Это как искать друга в городе:</p>
+                <p>Адрес — это навигация. Мы используем принцип "Города":</p>
 
                 <div class="target-box" style="padding: 10px; margin-bottom: 15px;">
                     <span style="font-family: monospace; font-weight:bold; font-size: 20px;">B1-02-05-A-01</span>
@@ -160,7 +158,7 @@
                 <div class="card">
                     <div class="card-row">
                         <span class="addr-badge" style="background: #FF5722;">B1</span>
-                        <div><b>Город</b><br><small>Секция склада</small></div>
+                        <div><b>Город</b><br><small>Секция (Бакалея)</small></div>
                     </div>
                     <div class="card-row">
                         <span class="addr-badge" style="background: #2196F3;">02</span>
@@ -170,9 +168,13 @@
                         <span class="addr-badge" style="background: #9C27B0;">05</span>
                         <div><b>Дом</b><br><small>Стеллаж</small></div>
                     </div>
+                    <div class="card-row">
+                        <span class="addr-badge" style="background: #E91E63;">A</span>
+                        <div><b>Этаж</b><br><small>Ярус (Полка)</small></div>
+                    </div>
                      <div class="card-row">
                         <span class="addr-badge" style="background: var(--arbuz-green);">01</span>
-                        <div><b>Квартира</b><br><small>Позиция на полке</small></div>
+                        <div><b>Квартира</b><br><small>Позиция на стеллаже</small></div>
                     </div>
                 </div>
 
@@ -180,20 +182,20 @@
             </div>
 
             <div id="screen-task" class="screen">
-                <h1>Первое задание</h1>
+                <h1>Практика</h1>
                 <p>Найди эту ячейку и "пикни" её сканером:</p>
 
                 <div class="target-box">
-                    <div style="font-size:12px; color:#E65100; font-weight:bold; margin-bottom:5px;">ИЩЕМ ЭТОТ АДРЕС</div>
+                    <div style="font-size:12px; color:#E65100; font-weight:bold; margin-bottom:5px;">ЦЕЛЕВОЙ АДРЕС</div>
                     <div class="target-val">B1-02-05-A-01</div>
                 </div>
 
-                <div class="hint-btn" onclick="openHint()">🤔 Забыл, как читать? Подсказка</div>
+                <div class="hint-btn" onclick="openHint()">🤔 Нужна подсказка?</div>
 
                 <div style="margin-top: 10px;">
-                    <input type="text" id="barcode-input" class="scan-input" placeholder="Сканируй сюда..." autocomplete="off">
+                    <input type="text" id="barcode-input" class="scan-input" placeholder="Ожидание сканирования..." autocomplete="off">
                     <div class="scan-status">
-                        Нажми желтую кнопку на ТСД
+                        Нажми желтую кнопку на терминале
                     </div>
                 </div>
 
@@ -202,15 +204,15 @@
 
             <div id="screen-success" class="screen" style="justify-content: center; align-items: center; text-align: center;">
                 <div style="font-size: 70px; margin-bottom: 10px;">🎉</div>
-                <h1 style="color: var(--arbuz-green);">Красавчик!</h1>
-                <p>Ты нашел правильную ячейку!<br>Первый шаг к званию лучшего сотрудника сделан.</p>
+                <h1 style="color: var(--arbuz-green);">Отлично!</h1>
+                <p>Ячейка найдена верно.<br>Ты справился с первым заданием.</p>
                 
                 <div class="card" style="width: 100%; text-align: center;">
                     <div style="font-size: 14px; color: #777;">Твое время:</div>
                     <div style="font-size: 32px; font-weight: 800; color: #333;" id="result-time">0.0с</div>
                 </div>
 
-                <button class="btn" onclick="location.reload()">Хочу еще раз 🔄</button>
+                <button class="btn" onclick="location.reload()">Пройти еще раз 🔄</button>
             </div>
 
         </div>
@@ -220,14 +222,13 @@
     <div class="bottom-sheet" id="hint-sheet">
         <h3 style="margin-top:0; text-align:center;">Шпаргалка</h3>
         <p><b>B1</b> — Иди в Бакалею (буква B).</p>
-        <p><b>02</b> — Ищи 2-й ряд.</p>
-        <p><b>05</b> — Отсчитай 5-й шкаф.</p>
-        <p><b>A</b> — Смотри на самую нижнюю полку.</p>
-        <button class="btn" style="padding: 12px;" onclick="closeHint()">Понял, спасибо!</button>
+        <p><b>02</b> — Найди 2-й ряд.</p>
+        <p><b>05</b> — Найди 5-й <b>стеллаж</b>.</p>
+        <p><b>A</b> — Это нижний ярус (полка).</p>
+        <button class="btn" style="padding: 12px;" onclick="closeHint()">Понятно</button>
     </div>
 
     <script>
-        // Часики
         setInterval(() => {
             document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }, 1000);
@@ -240,21 +241,18 @@
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('screen-' + id).classList.add('active');
 
-            // Если перешли к заданию - включаем таймер и фокус
             if (id === 'task') {
                 startTime = Date.now();
                 setTimeout(() => inputField.focus(), 500);
             }
         }
 
-        // ЛОГИКА СКАНЕРА (Прослушка Enter)
         inputField.addEventListener('keydown', function(event) {
             if (event.key === 'Enter' || event.keyCode === 13) {
                 checkBarcode(this.value);
             }
         });
 
-        // Держать фокус (чтобы сканер всегда печатал в поле)
         document.body.addEventListener('click', () => {
             if(document.getElementById('screen-task').classList.contains('active')) {
                 inputField.focus();
@@ -267,8 +265,7 @@
                 document.getElementById('result-time').innerText = totalTime + 'с';
                 goToScreen('success');
             } else {
-                // Если ошибка - дружелюбное сообщение
-                alert("Ой! Кажется, не та ячейка. Ты отсканировал: " + code + "\nПопробуй еще раз!");
+                alert("Ошибка! Отсканировано: " + code + "\nИщем: " + targetBarcode);
                 inputField.value = "";
                 inputField.focus();
             }
