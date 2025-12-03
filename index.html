@@ -107,10 +107,10 @@
             <div id="screen-welcome" class="screen active">
                 <div style="text-align: center; margin-top: 30px;">
                     <div style="font-size: 60px; margin-bottom: 10px;">🍉</div>
-                    <h1>Добро пожаловать в команду!</h1>
+                    <h1>Привет, стажёр!</h1>
                     <p>
-                        Чтобы быстро собирать заказы, нужно понимать, как устроен наш склад.<br><br>
-                       
+                        Добро пожаловать в команду.<br><br>
+                        Чтобы быстро собирать заказы, нужно понимать, как устроен наш склад.
                     </p>
                 </div>
                 
@@ -145,5 +145,151 @@
                 <div class="card">
                     <div class="card-row">
                         <div class="card-icon">🍦</div>
-                        <div><b>G — ГМЗ</b><br><span style="font-size:13px; color:#
+                        <div><b>G — ГМЗ</b><br><span style="font-size:13px; color:#777;">Гастрономия, молочка, заморозка</span></div>
+                    </div>
+                </div>
 
+                <div class="card">
+                    <div class="card-row">
+                        <div class="card-icon">💊</div>
+                        <div><b>PH — Аптека</b><br><span style="font-size:13px; color:#777;">Лекарственные препараты</span></div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="goToScreen('address')">Всё понятно 👉</button>
+            </div>
+
+            <div id="screen-address" class="screen">
+                <h1>Адрес ячейки</h1>
+                <p>Представь, что ищешь друга в городе. Адрес товара устроен так же:</p>
+
+                <div class="target-box" style="padding: 10px; margin-bottom: 15px;">
+                    <span style="font-family: monospace; font-weight:bold; font-size: 20px;">B1-02-05-A-01</span>
+                </div>
+
+                <div class="card">
+                    <div class="card-row">
+                        <span class="addr-badge" style="background: #FF5722;">B1</span>
+                        <div><b>Город</b><br><small>Отдел (Бакалея)</small></div>
+                    </div>
+                    <div class="card-row">
+                        <span class="addr-badge" style="background: #2196F3;">02</span>
+                        <div><b>Улица</b><br><small>Ряд</small></div>
+                    </div>
+                    <div class="card-row">
+                        <span class="addr-badge" style="background: #9C27B0;">05</span>
+                        <div><b>Дом</b><br><small>Стеллаж</small></div>
+                    </div>
+                    <div class="card-row">
+                        <span class="addr-badge" style="background: #E91E63;">A</span>
+                        <div><b>Этаж</b><br><small>Ярус (Полка)</small></div>
+                    </div>
+                     <div class="card-row">
+                        <span class="addr-badge" style="background: var(--arbuz-green);">01</span>
+                        <div><b>Квартира</b><br><small>Позиция на стеллаже</small></div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="goToScreen('task')">Запомнил, к практике! 🔥</button>
+            </div>
+
+            <div id="screen-task" class="screen">
+                <h1>Задание</h1>
+                <p>Теперь найди этот адрес на складе и "пикни" его сканером:</p>
+
+                <div class="target-box">
+                    <div style="font-size:12px; color:#E65100; font-weight:bold; margin-bottom:5px;">ЦЕЛЬ ПОИСКА</div>
+                    <div class="target-val">B1-02-05-A-01</div>
+                </div>
+
+                <div class="hint-btn" onclick="openHint()">🤔 Забыл, как читать? Подсказка</div>
+
+                <div style="margin-top: 10px;">
+                    <input type="text" id="barcode-input" class="scan-input" placeholder="Ожидание сканера..." autocomplete="off">
+                    <div class="scan-status">
+                        Нажми кнопку сканирования на ТСД
+                    </div>
+                </div>
+
+                <button class="dev-btn" onclick="devSimulateScan()">[Test Scan]</button>
+            </div>
+
+            <div id="screen-success" class="screen" style="justify-content: center; align-items: center; text-align: center;">
+                <div style="font-size: 70px; margin-bottom: 10px;">🎉</div>
+                <h1 style="color: var(--arbuz-green);">Молодец!</h1>
+                <p>Ты нашел правильную ячейку.<br>Теперь ты знаешь, как ориентироваться.</p>
+                
+                <div class="card" style="width: 100%; text-align: center;">
+                    <div style="font-size: 14px; color: #777;">Твое время:</div>
+                    <div style="font-size: 32px; font-weight: 800; color: #333;" id="result-time">0.0с</div>
+                </div>
+
+                <button class="btn" onclick="location.reload()">Повторить еще раз 🔄</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeHint()"></div>
+    <div class="bottom-sheet" id="hint-sheet">
+        <h3 style="margin-top:0; text-align:center;">Как найти друга?</h3>
+        <p><b>B1</b> — Едем в город Бакалея (B).</p>
+        <p><b>02</b> — Ищем улицу №2.</p>
+        <p><b>05</b> — Заходим в дом №5 (Стеллаж).</p>
+        <p><b>A</b> — Поднимаемся на этаж A (Нижняя полка).</p>
+        <button class="btn" style="padding: 12px;" onclick="closeHint()">Всё ясно!</button>
+    </div>
+
+    <script>
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }, 1000);
+
+        let startTime;
+        const targetBarcode = "B1-02-05-A-01";
+        const inputField = document.getElementById('barcode-input');
+
+        function goToScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-' + id).classList.add('active');
+
+            if (id === 'task') {
+                startTime = Date.now();
+                setTimeout(() => inputField.focus(), 500);
+            }
+        }
+
+        inputField.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                checkBarcode(this.value);
+            }
+        });
+
+        document.body.addEventListener('click', () => {
+            if(document.getElementById('screen-task').classList.contains('active')) {
+                inputField.focus();
+            }
+        });
+
+        function checkBarcode(code) {
+            if (code.trim() === targetBarcode) {
+                const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
+                document.getElementById('result-time').innerText = totalTime + 'с';
+                goToScreen('success');
+            } else {
+                alert("Не тот адрес! Ты нашел: " + code + "\nА нам нужен: " + targetBarcode);
+                inputField.value = "";
+                inputField.focus();
+            }
+        }
+
+        function openHint() { document.getElementById('overlay').style.display = 'block'; setTimeout(() => document.getElementById('hint-sheet').classList.add('active'), 10); }
+        function closeHint() { document.getElementById('hint-sheet').classList.remove('active'); setTimeout(() => document.getElementById('overlay').style.display = 'none', 300); inputField.focus(); }
+        
+        function devSimulateScan() {
+            inputField.value = targetBarcode;
+            checkBarcode(targetBarcode);
+        }
+    </script>
+</body>
+</html>
