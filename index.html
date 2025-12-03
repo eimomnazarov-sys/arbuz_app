@@ -56,7 +56,7 @@
         .btn {
             background: var(--arbuz-green); color: white; border: none; padding: 16px;
             font-size: 18px; font-weight: 700; border-radius: 12px; width: 100%;
-            cursor: pointer; box-shadow: 0 4px 10px rgba(0,160,70,0.3); margin-top: auto;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,160,70,0.3); margin-top: 20px;
         }
         .btn:active { transform: scale(0.98); }
 
@@ -108,14 +108,14 @@
                 <div style="text-align: center; margin-top: 30px;">
                     <div style="font-size: 60px; margin-bottom: 10px;">🍉</div>
                     <h1>Привет, стажёр!</h1>
-                    <p>Добро пожаловать в команду Arbuz! <br>Давай научимся работать со сканером и понимать адреса.</p>
+                    <p>Добро пожаловать в команду Arbuz! <br>Давай изучим зоны и научимся пользоваться сканером.</p>
                 </div>
                 
                 <div class="card">
                     <div style="font-weight: 700; margin-bottom: 10px; color: #333;">План обучения:</div>
-                    <div style="margin-bottom: 6px;">1️⃣ Изучить зоны склада</div>
+                    <div style="margin-bottom: 6px;">1️⃣ Изучить 5 зон склада</div>
                     <div style="margin-bottom: 6px;">2️⃣ Разобрать адрес ячейки</div>
-                    <div>3️⃣ Найти реальный товар</div>
+                    <div>3️⃣ Найти товар сканером</div>
                 </div>
 
                 <button class="btn" onclick="goToScreen('zones')">Поехали! 🚀</button>
@@ -123,24 +123,40 @@
 
             <div id="screen-zones" class="screen">
                 <h1>Зоны хранения</h1>
-                <p>Наш склад поделен на 3 температурные зоны:</p>
+                <p>Наш склад поделен на 5 главных секторов:</p>
 
                 <div class="card">
                     <div class="card-row">
                         <div class="card-icon">🍝</div>
-                        <div><b>B — Бакалея</b><br><span style="font-size:13px; color:#777;">Обычная температура (Dry)</span></div>
+                        <div><b>B — Бакалея (Food)</b><br><span style="font-size:13px; color:#777;">Крупы, консервы, напитки</span></div>
                     </div>
                 </div>
+
                 <div class="card">
                     <div class="card-row">
-                        <div class="card-icon">❄️</div>
-                        <div><b>F — Фреш</b><br><span style="font-size:13px; color:#777;">Холодильник +2°C (Fresh)</span></div>
+                        <div class="card-icon">🧴</div>
+                        <div><b>M — Химия (Non Food)</b><br><span style="font-size:13px; color:#777;">Бытовая химия, уход</span></div>
                     </div>
                 </div>
+
+                <div class="card">
+                    <div class="card-row">
+                        <div class="card-icon">🥦</div>
+                        <div><b>F — Фреш</b><br><span style="font-size:13px; color:#777;">Свежие овощи и фрукты</span></div>
+                    </div>
+                </div>
+
                 <div class="card">
                     <div class="card-row">
                         <div class="card-icon">🍦</div>
-                        <div><b>G — ГМЗ</b><br><span style="font-size:13px; color:#777;">Гастроном и молочка</span></div>
+                        <div><b>G — ГМЗ</b><br><span style="font-size:13px; color:#777;">Гастрономия, молочка, заморозка (-18)</span></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-row">
+                        <div class="card-icon">💊</div>
+                        <div><b>PH — Аптека</b><br><span style="font-size:13px; color:#777;">Лекарственные препараты</span></div>
                     </div>
                 </div>
 
