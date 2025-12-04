@@ -58,7 +58,7 @@
         }
         .btn:active { transform: scale(0.98); }
         
-        /* Кнопка Dev для тестов */
+        /* Кнопка Dev */
         .dev-btn { position: absolute; bottom: 5px; right: 5px; opacity: 0.15; font-size: 11px; z-index: 999; border: 1px solid #333; padding: 2px 5px; background: #eee; }
 
         /* --- СТИЛИ WMS (СБОРКА) --- */
@@ -144,7 +144,7 @@
 
     <div class="device-screen">
         <div class="status-bar">
-            <span>Arbuz WMS v4.1</span>
+            <span>Arbuz WMS v4.2</span>
             <span id="clock">10:00</span>
         </div>
 
@@ -162,25 +162,26 @@
     <script>
         // --- ДАННЫЕ ЗАДАНИЙ И ТОВАРОВ ---
 
-        // 1. Поиск локаций
+        // 1. Поиск локаций (Part 1)
         const locTasks = {
             1: { target: "B1-02-05-A-01", hint: "<p><b>B1</b> — Бакалея.</p><p><b>02</b> — Ряд 2.</p><p><b>05</b> — Стеллаж 5.</p><p><b>A</b> — Нижняя полка.</p>" },
             2: { target: "G1-02-03-D-02", hint: "<p><b>G</b> — ГМЗ (Гастроном).</p><p>❄️ <b>ВНИМАНИЕ:</b> Тут холодно!</p><p>Надень куртку перед тем, как идти в этот ряд.</p>" }
         };
 
-        // 2. Простой заказ (Горошек)
+        // 2. Простой заказ (Горошек) (Part 2)
         const trainingOrder = {
             id: "train_01",
             addr: { sec: "B1", row: "01", rack: "01", shelf: "B", cell: "02" },
             product: {
                 name: "Горошек Bonduelle консервированный, 425 мл",
                 barcode: "3083680048774", 
-                img: "https://static.openfoodfacts.org/images/products/308/368/103/5230/front_ru.10.400.jpg",
+                // Ссылка с Kaspi (надежная)
+                img: "https://resources.cdn-kaspi.kz/img/m/p/h90/h2d/63820987924510.jpg",
                 qty: 1
             }
         };
 
-        // 3. Сложный заказ (Бананы + Сметана)
+        // 3. Сложный заказ (Бананы + Сметана) (Part 3)
         const complexOrderItems = [
             {
                 id: 1,
@@ -188,11 +189,12 @@
                 product: {
                     name: "Бананы (Весовые)",
                     barcode: "2001001",
-                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Banana-Single.jpg/400px-Banana-Single.jpg",
+                    // Ссылка с Kaspi (надежная)
+                    img: "https://resources.cdn-kaspi.kz/img/m/p/h3e/h53/63952793665566.jpg",
                     qty: 2, // 2 кг
                     step: 1, 
-                    stepLabel: "шаг продукта-1",
-                    stepHint: "Обрати внимание что клиент заказал два килограмма и фасовка по одному киллограмму , тебе надо взять два пакета по килограмму"
+                    stepLabel: "Шаг фасовки: 1 кг",
+                    stepHint: "Обрати внимание: клиент заказал два килограмма, а фасовка по одному килограмму. Тебе надо взять два пакета по килограмму."
                 }
             },
             {
@@ -201,7 +203,8 @@
                 product: {
                     name: "Сметана President 15%, 400 г",
                     barcode: "4870055001231",
-                    img: "https://static.openfoodfacts.org/images/products/487/005/500/1231/front_ru.3.400.jpg",
+                    // Ссылка с Kaspi (надежная)
+                    img: "https://resources.cdn-kaspi.kz/img/m/p/h06/h53/63953874059294.jpg",
                     qty: 1
                 }
             }
@@ -517,7 +520,7 @@
         function closeHint() { document.getElementById('hint-sheet').classList.remove('active'); setTimeout(() => document.getElementById('overlay').style.display = 'none', 300); }
         function simulateScan(code) { checkScan(code); }
 
-        // START
+        // ЗАПУСК
         renderWelcome();
         setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), 1000);
 
