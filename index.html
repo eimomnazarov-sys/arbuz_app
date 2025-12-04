@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Arbuz WMS Training</title>
+    <title>Arbuz WMS Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
@@ -44,10 +44,6 @@
         p { color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 24px; text-align: center; }
 
         .card { background: white; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-        .card-row { display: flex; align-items: center; margin-bottom: 12px; }
-        .card-icon { font-size: 28px; width: 40px; text-align: center; margin-right: 12px; }
-        
-        /* Кнопки */
         .btn {
             background: var(--arbuz-green); color: white; border: none; padding: 16px;
             font-size: 18px; font-weight: 700; border-radius: 12px; width: 100%;
@@ -55,15 +51,10 @@
         }
         .btn:active { transform: scale(0.98); }
 
-        .addr-badge { color: white; padding: 4px 8px; border-radius: 6px; font-family: monospace; font-weight: bold; margin-right: 12px; min-width: 32px; text-align: center; }
-        .target-box { background: #E8F5E9; border: 2px dashed var(--arbuz-green); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
-        .target-val { font-size: 32px; font-weight: 800; color: #333; font-family: monospace; }
-        
         .scan-input { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; font-family: monospace; outline: none; text-align: center; }
         .scan-input:focus { border-color: var(--arbuz-green); background: #fff; }
-        .scan-status { font-size: 13px; color: #888; margin-top: 8px; text-align: center; }
 
-        /* --- 🔥 СТИЛИ СБОРКИ (ПОВТОРЯЕМ СКРИНШОТ) --- */
+        /* --- СБОРКА ЗАКАЗА --- */
         .wms-header {
             display: flex; justify-content: space-between; background: white; padding: 15px 10px;
             border-bottom: 1px solid #eee; margin: -20px -20px 15px -20px; 
@@ -80,8 +71,6 @@
         .prod-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
         .prod-title { font-weight: 700; font-size: 15px; color: #222; line-height: 1.3; }
         .prod-meta { font-size: 12px; color: #777; }
-        .prod-station { font-size: 12px; color: #333; font-weight: 600; margin-top: 4px; }
-        
         .prod-img-box { width: 90px; height: 90px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         .prod-img { width: 100%; height: 100%; object-fit: contain; }
 
@@ -89,7 +78,8 @@
         .qty-box { flex: 1; text-align: center; border-radius: 8px; padding: 10px; position: relative; height: 70px; display: flex; align-items: center; justify-content: center; }
         .qty-label { position: absolute; top: -20px; left: 0; width: 100%; font-size: 12px; color: #777; text-align: center; }
         
-        .qty-red { background: var(--arbuz-red); color: white; box-shadow: 0 4px 12px rgba(226, 30, 44, 0.25); }
+        .qty-red { background: var(--arbuz-red); color: white; box-shadow: 0 4px 12px rgba(226, 30, 44, 0.25); transition: background 0.3s; }
+        .qty-red.done { background: var(--arbuz-green); }
         .qty-val { font-size: 38px; font-weight: 700; }
         .qty-white { background: white; border: 2px solid var(--arbuz-green); color: var(--arbuz-green); box-sizing: border-box; }
 
@@ -97,30 +87,42 @@
             display: flex; justify-content: space-between; margin-top: auto; 
             padding-top: 15px; padding-bottom: 10px;
         }
-        .action-item { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 70px; cursor: pointer;}
+        .action-item { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 70px; cursor: pointer; position: relative; }
         .circle-btn {
             width: 56px; height: 56px; border-radius: 50%; border: none;
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px; transition: transform 0.1s;
+            font-size: 24px; transition: transform 0.1s; position: relative;
         }
         .circle-btn:active { transform: scale(0.95); }
         .btn-gray { background: #E0E0E0; color: #666; }
-        .btn-check { background: #E0E0E0; color: #999; }
-        .btn-check.ready { background: var(--arbuz-green); color: white; box-shadow: 0 4px 10px rgba(0,160,70,0.3); }
+        .btn-check { background: #E0E0E0; color: #999; transition: all 0.3s;}
+        .btn-check.ready { background: var(--arbuz-green); color: white; box-shadow: 0 4px 10px rgba(0,160,70,0.3); animation: pulseGreen 2s infinite; }
         .act-label { font-size: 11px; color: #999; text-align: center; line-height: 1.2;}
 
+        /* 🔥 СТИЛИ ПОДСКАЗКИ НА КНОПКАХ */
+        .hint-marker {
+            position: absolute; top: -2px; right: -2px;
+            background: #2196F3; color: white; border-radius: 50%;
+            width: 18px; height: 18px; font-size: 12px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid white; animation: pulseBlue 2s infinite;
+        }
+
+        @keyframes pulseGreen { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes pulseBlue { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        /* Модалка */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 90; display: none; }
         .bottom-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: white; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 24px; box-sizing: border-box; transition: bottom 0.3s; z-index: 100; }
         .bottom-sheet.active { bottom: 0; }
-        .hint-btn { color: #1976D2; font-weight: 600; cursor: pointer; text-align: center; padding: 10px; display: block;}
-        .dev-btn { position: absolute; bottom: 5px; right: 5px; opacity: 0.1; font-size: 10px; }
+        .dev-btn { position: absolute; bottom: 5px; right: 5px; opacity: 0.1; font-size: 10px; z-index: 999;}
     </style>
 </head>
 <body>
 
     <div class="device-screen">
         <div class="status-bar">
-            <span>Arbuz WMS</span>
+            <span>Arbuz WMS v3.0</span>
             <span id="clock">10:00</span>
         </div>
 
@@ -136,227 +138,186 @@
     </div>
 
     <script>
-        // --- ДАННЫЕ ---
-        const tasks = {
-            1: { target: "B1-02-05-A-01", hint: "<p><b>B1</b> — Бакалея.</p><p><b>02</b> — Ряд 2.</p><p><b>05</b> — Стеллаж 5.</p><p><b>A</b> — Нижняя полка.</p>" },
-            2: { target: "G1-02-03-D-02", hint: "<p><b>G</b> — ГМЗ (Гастроном).</p><p>❄️ <b>ВНИМАНИЕ:</b> Тут холодно!</p><p>Надень куртку перед тем, как идти в этот ряд.</p>" },
-            3: { 
-                target: "B1-01-01-B-02", 
-                // РЕАЛЬНЫЙ ШТРИХКОД
-                productBarcode: "3083680048774", 
-                productName: "Горошек Bonduelle консервированный, 425 мл",
-                imgUrl: "https://bonduelle.ru/upload/iblock/d76/d7645063714b2d3550e5670868516d7a.png" 
+        // --- КОНФИГУРАЦИЯ ЗАКАЗОВ ---
+        
+        // Простой заказ (Горошек) - Обучение кнопкам
+        const trainingOrder = {
+            id: "train_01",
+            addr: { sec: "B1", row: "01", rack: "01", shelf: "B", cell: "02" },
+            product: {
+                name: "Горошек Bonduelle консервированный, 425 мл",
+                barcode: "3083680048774", // Реальный ШК
+                img: "https://bonduelle.ru/upload/iblock/d76/d7645063714b2d3550e5670868516d7a.png",
+                qty: 1
             }
         };
 
-        // --- ШАБЛОНЫ ЭКРАНОВ ---
-        const screens = {
-            // 1. WELCOME
-            welcome: `
+        // Сложный заказ (Бананы + Сметана)
+        const complexOrderItems = [
+            {
+                id: 1,
+                addr: { sec: "F1", row: "02", rack: "04", shelf: "A", cell: "01" }, // Фреш
+                product: {
+                    name: "Бананы (Весовые)",
+                    barcode: "2001001",
+                    img: "https://arbuz.kz/image/s3/arbuz-kz-products/19532-banany_kg.jpg?w=1100&h=1100&_c=1687157640",
+                    qty: 2, // 2 кг
+                    step: 1 // шаг сканирования 1
+                }
+            },
+            {
+                id: 2,
+                addr: { sec: "G1", row: "01", rack: "02", shelf: "C", cell: "03" }, // ГМЗ
+                product: {
+                    name: "Сметана President 15%, 400 г",
+                    barcode: "4870055001231",
+                    img: "https://arbuz.kz/image/s3/arbuz-kz-products/21535-smetana_president_15_400_g.jpg?w=1100&h=1100&_c=1689658705",
+                    qty: 1,
+                    step: 1
+                }
+            }
+        ];
+
+        // --- СОСТОЯНИЕ ---
+        let state = {
+            screen: 'welcome',
+            orderType: null, // 'training' or 'complex'
+            currentItemIndex: 0,
+            pickedQty: 0
+        };
+
+        // --- РЕНДЕР ЭКРАНОВ ---
+        
+        function renderWelcome() {
+            document.getElementById('main-content').innerHTML = `
                 <div class="screen active" style="text-align: center; margin-top: 30px;">
-                    <div style="font-size: 60px; margin-bottom: 10px;">🍉</div>
-                    <h1>Привет, стажёр!</h1>
-                    <p>Добро пожаловать в команду.<br>Научимся работать со сканером и собирать заказы.</p>
-                    <button class="btn" onclick="renderScreen('zones')">Начать обучение 🚀</button>
-                </div>
-            `,
-            // 2. ZONES
-            zones: `
-                <div class="screen active">
-                    <h1>Регионы склада</h1>
-                    <p>5 главных отделов хранения:</p>
-                    <div class="card"><div class="card-row"><div class="card-icon">🍝</div><div><b>B — Бакалея (Food)</b><br><span style="font-size:12px; color:#777;">Крупы, консервы</span></div></div></div>
-                    <div class="card"><div class="card-row"><div class="card-icon">🧴</div><div><b>M — Химия (Non Food)</b><br><span style="font-size:12px; color:#777;">Бытовая химия</span></div></div></div>
-                    <div class="card"><div class="card-row"><div class="card-icon">🍉</div><div><b>F — Фреш</b><br><span style="font-size:12px; color:#777;">Свежие фрукты</span></div></div></div>
-                    <div class="card"><div class="card-row"><div class="card-icon">🍦</div><div><b>G — ГМЗ</b><br><span style="font-size:12px; color:#777;">Молочка, заморозка</span></div></div></div>
-                    <div class="card"><div class="card-row"><div class="card-icon">💊</div><div><b>PH — Аптека</b><br><span style="font-size:12px; color:#777;">Лекарства</span></div></div></div>
-                    <button class="btn" onclick="renderScreen('address')">Всё понятно 👉</button>
-                </div>
-            `,
-            // 3. ADDRESS
-            address: `
-                <div class="screen active">
-                    <h1>Адрес ячейки</h1>
-                    <p>Принцип "Города":</p>
-                    <div class="target-box" style="padding:10px;"><span style="font-family:monospace; font-weight:bold; font-size:20px;">B1-02-05-A-01</span></div>
-                    <div class="card">
-                        <div class="card-row"><span class="addr-badge" style="background:#FF5722;">B1</span><div><b>Город</b> (Отдел)</div></div>
-                        <div class="card-row"><span class="addr-badge" style="background:#2196F3;">02</span><div><b>Улица</b> (Ряд)</div></div>
-                        <div class="card-row"><span class="addr-badge" style="background:#9C27B0;">05</span><div><b>Дом</b> (Стеллаж)</div></div>
-                        <div class="card-row"><span class="addr-badge" style="background:#E91E63;">A</span><div><b>Этаж</b> (Полка)</div></div>
-                        <div class="card-row"><span class="addr-badge" style="background:var(--arbuz-green);">01</span><div><b>Квартира</b> (Позиция)</div></div>
+                    <div style="font-size: 60px; margin-bottom: 20px;">📦</div>
+                    <h1>Сборка заказов</h1>
+                    <p>Сейчас мы потренируемся собирать реальные заказы.</p>
+                    
+                    <div class="card" style="text-align:left;">
+                        <b>Этап 1:</b> Простой заказ (1 товар)<br>
+                        <small style="color:#777">Изучим кнопки "Замена" и "Не найден"</small>
                     </div>
-                    <button class="btn" onclick="startTask(1)">Запомнил, к практике! 🔥</button>
+
+                    <div class="card" style="text-align:left;">
+                        <b>Этап 2:</b> Сложный заказ (2 товара)<br>
+                        <small style="color:#777">Весовой товар (2кг) + Штучный товар</small>
+                    </div>
+
+                    <button class="btn" onclick="startTrainingOrder()">Начать Этап 1 🚀</button>
                 </div>
-            `,
-            // 4. TASK 1 (B)
-            task1: `
-                <div class="screen active">
-                    <h1>Задание №1</h1>
-                    <p>Найди адрес и сканируй:</p>
-                    <div class="target-box">
-                        <div style="font-size:12px; color:#E65100; font-weight:bold; margin-bottom:5px;">ЦЕЛЬ</div>
-                        <div class="target-val">${tasks[1].target}</div>
-                    </div>
-                    <div class="hint-btn" onclick="showHint(1)">🤔 Подсказка</div>
-                    <div style="margin-top:10px;">
-                        <input type="text" id="barcode-input" class="scan-input" placeholder="Сканируй..." autocomplete="off">
-                        <div class="scan-status">Нажми кнопку сканирования</div>
-                    </div>
-                    <button class="dev-btn" onclick="simulateScan('${tasks[1].target}')">[DEV: OK]</button>
-                </div>
-            `,
-            // 5. TASK 2 (G - Cold)
-            task2: `
-                <div class="screen active">
-                    <h1>Задание №2</h1>
-                    <p>Следующая ячейка:</p>
-                    <div class="target-box" style="border-color:#2196F3; background:#E3F2FD;">
-                        <div style="font-size:12px; color:#1565C0; font-weight:bold; margin-bottom:5px;">ЦЕЛЬ</div>
-                        <div class="target-val">${tasks[2].target}</div>
-                    </div>
-                    <div class="hint-btn" onclick="showHint(2)">❄️ Куда идти?</div>
-                    <div style="margin-top:10px;">
-                        <input type="text" id="barcode-input" class="scan-input" placeholder="Сканируй..." autocomplete="off">
-                        <div class="scan-status">Нажми кнопку сканирования</div>
-                    </div>
-                    <button class="dev-btn" onclick="simulateScan('${tasks[2].target}')">[DEV: OK]</button>
-                </div>
-            `,
-            // 6. ONBOARDING SUCCESS
-            onboarding_complete: `
-                <div class="screen active" style="text-align: center; justify-content:center; height:100%;">
-                    <div style="font-size: 70px; margin-bottom: 20px;">🎓</div>
-                    <h1 style="color: var(--arbuz-green);">Первый этап пройден!</h1>
-                    <p>Ты изучил зоны и научился находить ячейки.</p>
-                    <div class="card" style="margin-top:20px; background:#E8F5E9;">
-                        <p style="margin:0; color:#2e7d32;"><b>Представь:</b><br>Ты получил первый реальный заказ на сборку.</p>
-                    </div>
-                    <button class="btn" style="background:#00A046; color:white; margin-top:30px;" onclick="renderScreen('real_order')">Начать отбор 📦</button>
-                </div>
-            `,
-            // 7. REAL ORDER (UI СКРИНШОТА)
-            real_order: `
+            `;
+        }
+
+        function renderOrderScreen(item) {
+            const isTraining = state.orderType === 'training';
+            
+            // Добавляем индикаторы подсказок только для тренировочного режима
+            const hintMarker = isTraining ? `<div class="hint-marker">?</div>` : ``;
+
+            document.getElementById('main-content').innerHTML = `
                 <div class="screen active" style="padding:0;">
                     <div class="wms-header">
-                        <div class="wms-addr-block"><span class="wms-addr-val">B1</span><span class="wms-addr-lbl">секция</span></div>
-                        <div class="wms-addr-block"><span class="wms-addr-val">01</span><span class="wms-addr-lbl">ряд</span></div>
-                        <div class="wms-addr-block"><span class="wms-addr-val">01</span><span class="wms-addr-lbl">стеллаж</span></div>
-                        <div class="wms-addr-block"><span class="wms-addr-val">B</span><span class="wms-addr-lbl">полка</span></div>
-                        <div class="wms-addr-block"><span class="wms-addr-val">02</span><span class="wms-addr-lbl">ячейка</span></div>
+                        <div class="wms-addr-block"><span class="wms-addr-val">${item.addr.sec}</span><span class="wms-addr-lbl">секция</span></div>
+                        <div class="wms-addr-block"><span class="wms-addr-val">${item.addr.row}</span><span class="wms-addr-lbl">ряд</span></div>
+                        <div class="wms-addr-block"><span class="wms-addr-val">${item.addr.rack}</span><span class="wms-addr-lbl">стеллаж</span></div>
+                        <div class="wms-addr-block"><span class="wms-addr-val">${item.addr.shelf}</span><span class="wms-addr-lbl">полка</span></div>
+                        <div class="wms-addr-block"><span class="wms-addr-val">${item.addr.cell}</span><span class="wms-addr-lbl">ячейка</span></div>
                     </div>
 
                     <div style="padding: 0 15px;">
-                        <div style="font-size:12px; color:#777; margin-bottom:5px;">Остаток: 17</div>
+                        <div style="font-size:12px; color:#777; margin-bottom:5px;">Задание ${state.currentItemIndex + 1}</div>
                         
                         <div class="wms-product-card">
                             <div class="prod-info">
-                                <div class="prod-title">${tasks[3].productName}</div>
-                                <div class="prod-meta">Штрихкоды: ${tasks[3].productBarcode}</div>
-                                <div class="prod-meta">Комментарий: "8701531..."</div>
-                                <div class="prod-station">Станция: Станция 10</div>
+                                <div class="prod-title">${item.product.name}</div>
+                                <div class="prod-meta">ШК: ${item.product.barcode}</div>
+                                ${item.product.qty > 1 ? '<div style="color:#E65100; font-size:12px; font-weight:bold;">⚠️ Сканируй каждую единицу! (2 раза)</div>' : ''}
                             </div>
                             <div class="prod-img-box">
-                                <img src="${tasks[3].imgUrl}" class="prod-img" alt="Горошек">
+                                <img src="${item.product.img}" class="prod-img">
                             </div>
                         </div>
 
                         <div style="display:flex; gap:8px; margin-bottom:20px;">
-                            <input type="text" id="barcode-input" class="scan-input" style="text-align:left; font-size:16px;" placeholder="Отсканируйте штрихкод">
+                            <input type="text" id="barcode-input" class="scan-input" style="text-align:left; font-size:16px;" placeholder="Сканируй товар..." autocomplete="off">
                             <button style="background:white; border:1px solid #ddd; border-radius:8px; width:50px; font-size:20px; color:#666;">→</button>
                         </div>
 
                         <div class="counters-row">
-                            <div class="qty-box qty-red">
-                                <span class="qty-label">Отобрано, шт</span>
-                                <span class="qty-val" id="picked-val">0</span>
+                            <div class="qty-box qty-red" id="qty-box-bg">
+                                <span class="qty-label">Отобрано</span>
+                                <span class="qty-val" id="picked-val">${state.pickedQty}</span>
                             </div>
                             <div style="padding-bottom:25px; color:#777;">из</div>
                             <div class="qty-box qty-white">
-                                <span class="qty-label">Заказано, шт</span>
-                                <span class="qty-val">1</span>
+                                <span class="qty-label">Заказано</span>
+                                <span class="qty-val">${item.product.qty}</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="bottom-actions" style="padding: 10px 20px;">
-                        <div class="action-item" onclick="alert('Это кнопка Назад')">
+                        <div class="action-item">
                             <button class="circle-btn btn-gray">←</button>
                             <span class="act-label">Назад</span>
                         </div>
                         <div class="action-item" onclick="showReplaceHint()">
                             <button class="circle-btn btn-gray">↻</button>
+                            ${hintMarker}
                             <span class="act-label">Заменить</span>
                         </div>
-                        <div class="action-item" onclick="finishRealOrder()">
+                        <div class="action-item" onclick="confirmItem()">
                             <button class="circle-btn btn-check" id="btn-confirm">✓</button>
                             <span class="act-label">Подтвердить</span>
                         </div>
                         <div class="action-item" onclick="showNotFoundHint()">
                             <button class="circle-btn btn-gray">✕</button>
+                            ${hintMarker}
                             <span class="act-label">Не найден</span>
                         </div>
                     </div>
-                    <button class="dev-btn" onclick="simulateScan('${tasks[3].productBarcode}')">[DEV: Scan Product]</button>
+                    
+                    <button class="dev-btn" onclick="simulateScan('${item.product.barcode}')">[DEV: Correct Scan]</button>
                 </div>
-            `,
-            // 8. FINAL SUCCESS
-            final_success: `
+            `;
+            
+            // Фокус и энтер
+            setTimeout(() => {
+                const inp = document.getElementById('barcode-input');
+                if(inp) {
+                    inp.focus();
+                    inp.addEventListener('keydown', handleEnter);
+                }
+            }, 300);
+        }
+
+        function renderSuccess(msg, btnText, action) {
+            document.getElementById('main-content').innerHTML = `
                 <div class="screen active" style="text-align: center; justify-content:center; height:100%;">
-                    <div style="font-size: 70px; margin-bottom: 20px;">✅</div>
-                    <h1 style="color: var(--arbuz-green);">Заказ собран!</h1>
-                    <p>Ты успешно отобрал горошек.<br>Так работает наш WMS.</p>
-                    <button class="btn" onclick="location.reload()">Начать заново 🔄</button>
+                    <div style="font-size: 80px; margin-bottom: 20px;">✅</div>
+                    <h1 style="color: var(--arbuz-green);">Отлично!</h1>
+                    <p>${msg}</p>
+                    <button class="btn" onclick="${action}">${btnText}</button>
                 </div>
-            `
-        };
+            `;
+        }
 
         // --- ЛОГИКА ---
-        let currentScreen = '';
 
-        function renderScreen(name) {
-            currentScreen = name;
-            document.getElementById('main-content').innerHTML = screens[name];
-            const input = document.getElementById('barcode-input');
-            if (input) {
-                setTimeout(() => input.focus(), 500);
-                input.addEventListener('keydown', handleEnter);
-            }
+        function startTrainingOrder() {
+            state.orderType = 'training';
+            state.currentItemIndex = 0;
+            state.pickedQty = 0;
+            renderOrderScreen(trainingOrder);
         }
 
-        function startTask(n) { renderScreen('task' + n); }
-        
-        // Всплывающие подсказки
-        function showHint(n) {
-            document.getElementById('hint-title').innerText = n === 2 ? "Внимание!" : "Подсказка";
-            document.getElementById('hint-text').innerHTML = tasks[n].hint;
-            openOverlay();
-        }
-
-        function showReplaceHint() {
-            document.getElementById('hint-title').innerText = "Кнопка «Заменить»";
-            document.getElementById('hint-text').innerHTML = 
-                "Если ты пришел к нужной ячейке, а товара нет, и эта кнопка <b>активна</b> — ты должен сделать замену товара на похожий и сообщить об этом супервайзеру.";
-            openOverlay();
-        }
-
-        function showNotFoundHint() {
-            document.getElementById('hint-title').innerText = "Кнопка «Не найден»";
-            document.getElementById('hint-text').innerHTML = 
-                "Если товара нет, а кнопка «Заменить» <b>НЕ активна</b> — значит клиент не хочет замену. Нажми «Не найден» и собирай дальше.";
-            openOverlay();
-        }
-
-        function openOverlay() {
-            document.getElementById('overlay').style.display = 'block';
-            setTimeout(() => document.getElementById('hint-sheet').classList.add('active'), 10);
-        }
-
-        function closeHint() {
-            document.getElementById('hint-sheet').classList.remove('active');
-            setTimeout(() => document.getElementById('overlay').style.display = 'none', 300);
-            const input = document.getElementById('barcode-input');
-            if(input) input.focus();
+        function startComplexOrder() {
+            state.orderType = 'complex';
+            state.currentItemIndex = 0;
+            state.pickedQty = 0;
+            renderOrderScreen(complexOrderItems[0]);
         }
 
         function handleEnter(e) {
@@ -364,48 +325,82 @@
         }
 
         function checkScan(code) {
-            code = code.trim();
             const input = document.getElementById('barcode-input');
+            let currentItem;
+            
+            if (state.orderType === 'training') currentItem = trainingOrder;
+            else currentItem = complexOrderItems[state.currentItemIndex];
 
-            if (currentScreen === 'task1') {
-                if (code === tasks[1].target) { alert("Верно!"); startTask(2); } 
-                else { alert("Ошибка! Ищем: " + tasks[1].target); input.value=""; }
-            } 
-            else if (currentScreen === 'task2') {
-                if (code === tasks[2].target) { renderScreen('onboarding_complete'); }
-                else { alert("Ошибка! Ищем: " + tasks[2].target); input.value=""; }
-            }
-            else if (currentScreen === 'real_order') {
-                if (code === tasks[3].productBarcode) {
-                    document.getElementById('picked-val').innerText = "1";
+            if (code.trim() === currentItem.product.barcode) {
+                // Успешный скан
+                state.pickedQty += 1; // Всегда +1 шаг
+                
+                // Обновляем UI
+                document.getElementById('picked-val').innerText = state.pickedQty;
+                input.value = "";
+                input.focus();
+
+                // Проверка завершения строки
+                if (state.pickedQty >= currentItem.product.qty) {
+                    // Строка собрана
+                    document.getElementById('qty-box-bg').classList.add('done');
                     const btn = document.getElementById('btn-confirm');
                     btn.classList.add('ready');
                     btn.classList.remove('btn-check');
                     input.blur();
-                    input.style.background = "#E8F5E9";
-                    input.value = "OK: " + code;
+                    input.placeholder = "Нажми галочку ✓";
+                }
+            } else {
+                alert("❌ Неверный товар! \nОжидается ШК: " + currentItem.product.barcode);
+                input.value = "";
+            }
+        }
+
+        function confirmItem() {
+            const btn = document.getElementById('btn-confirm');
+            if (!btn.classList.contains('ready')) {
+                alert("Сначала отсканируйте все товары!");
+                return;
+            }
+
+            if (state.orderType === 'training') {
+                renderSuccess("Вы освоили кнопки и собрали простой заказ.", "Перейти к Сложному заказу 🔥", "startComplexOrder()");
+            } 
+            else if (state.orderType === 'complex') {
+                // Если это был последний товар
+                if (state.currentItemIndex >= complexOrderItems.length - 1) {
+                    renderSuccess("Сложный заказ из 2 позиций собран!", "Закончить смену 🏠", "location.reload()");
                 } else {
-                    alert("Не тот товар! Штрихкод: " + tasks[3].productBarcode);
-                    input.value="";
+                    // Переход к следующему товару
+                    state.currentItemIndex++;
+                    state.pickedQty = 0;
+                    alert("Позиция принята! Следующий товар...");
+                    renderOrderScreen(complexOrderItems[state.currentItemIndex]);
                 }
             }
         }
 
-        function finishRealOrder() {
-            if (document.getElementById('picked-val').innerText === "1") {
-                renderScreen('final_success');
-            } else {
-                alert("Сначала отсканируй товар!");
-            }
+        // --- ПОДСКАЗКИ ---
+        function showReplaceHint() {
+            document.getElementById('hint-title').innerText = "Кнопка «Заменить»";
+            document.getElementById('hint-text').innerHTML = 
+                "Нажимай, если:<br>1. Пришел к ячейке.<br>2. Товара нет.<br>3. Кнопка <b>АКТИВНА</b>.<br><br>👉 Нужно подобрать аналог и сообщить супервайзеру.";
+            openOverlay();
         }
 
-        function simulateScan(code) {
-            const input = document.getElementById('barcode-input');
-            if(input) { input.value = code; checkScan(code); }
+        function showNotFoundHint() {
+            document.getElementById('hint-title').innerText = "Кнопка «Не найден»";
+            document.getElementById('hint-text').innerHTML = 
+                "Нажимай, если:<br>1. Товара нет.<br>2. «Заменить» <b>НЕ АКТИВНА</b>.<br><br>👉 Значит клиент запретил замену. Просто жми крестик.";
+            openOverlay();
         }
+
+        function openOverlay() { document.getElementById('overlay').style.display = 'block'; setTimeout(() => document.getElementById('hint-sheet').classList.add('active'), 10); }
+        function closeHint() { document.getElementById('hint-sheet').classList.remove('active'); setTimeout(() => document.getElementById('overlay').style.display = 'none', 300); }
+        function simulateScan(code) { checkScan(code); }
 
         // START
-        renderScreen('welcome');
+        renderWelcome();
         setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), 1000);
 
     </script>
