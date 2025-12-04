@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
-        /* --- БАЗОВЫЕ НАСТРОЙКИ (Стиль Zebra) --- */
+        /* --- БАЗОВЫЕ НАСТРОЙКИ --- */
         :root {
             --arbuz-green: #00A046;
             --arbuz-red: #E21E2C;
@@ -44,7 +44,7 @@
         h1 { margin: 0 0 10px 0; font-size: 24px; font-weight: 800; color: #222; text-align: center; }
         p { color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 24px; text-align: center; }
 
-        /* Карточки обучения */
+        /* Карточки */
         .card { background: white; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
         .card-row { display: flex; align-items: center; margin-bottom: 12px; }
         .card-row:last-child { margin-bottom: 0; }
@@ -57,6 +57,8 @@
             cursor: pointer; box-shadow: 0 4px 10px rgba(0,160,70,0.3); margin-top: 20px;
         }
         .btn:active { transform: scale(0.98); }
+        
+        /* Кнопка Dev для тестов */
         .dev-btn { position: absolute; bottom: 5px; right: 5px; opacity: 0.15; font-size: 11px; z-index: 999; border: 1px solid #333; padding: 2px 5px; background: #eee; }
 
         /* --- СТИЛИ WMS (СБОРКА) --- */
@@ -109,7 +111,7 @@
         .btn-check.ready { background: var(--arbuz-green); color: white; box-shadow: 0 4px 10px rgba(0,160,70,0.3); animation: pulseGreen 2s infinite; }
         .act-label { font-size: 11px; color: #999; text-align: center; line-height: 1.2;}
 
-        /* 🔥 ПОДСКАЗКИ */
+        /* Подсказки */
         .hint-marker {
             position: absolute; top: -2px; right: -2px;
             background: var(--hint-blue); color: white; border-radius: 50%;
@@ -118,14 +120,12 @@
             border: 2px solid white; animation: pulseBlue 2s infinite;
         }
         
-        /* Значок вопроса рядом с шагом товара */
         .step-help-icon {
             cursor: pointer; background: #E3F2FD; border-radius: 50%; width: 20px; height: 20px; 
             display: inline-flex; align-items: center; justify-content: center; 
             font-weight: bold; font-size: 12px; color: #1976D2; border: 1px solid #BBDEFB; margin-left: 5px;
         }
 
-        /* Анимации */
         @keyframes pulseGreen { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         @keyframes pulseBlue { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
@@ -134,7 +134,6 @@
         .bottom-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: white; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 24px; box-sizing: border-box; transition: bottom 0.3s; z-index: 100; }
         .bottom-sheet.active { bottom: 0; }
         
-        /* Бейджи для адреса */
         .addr-badge { color: white; padding: 4px 8px; border-radius: 6px; font-family: monospace; font-weight: bold; margin-right: 12px; min-width: 32px; text-align: center; }
         .target-box { background: #E8F5E9; border: 2px dashed var(--arbuz-green); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
         .target-val { font-size: 32px; font-weight: 800; color: #333; font-family: monospace; }
@@ -145,7 +144,7 @@
 
     <div class="device-screen">
         <div class="status-bar">
-            <span>Arbuz WMS v4.0</span>
+            <span>Arbuz WMS v4.1</span>
             <span id="clock">10:00</span>
         </div>
 
@@ -163,13 +162,13 @@
     <script>
         // --- ДАННЫЕ ЗАДАНИЙ И ТОВАРОВ ---
 
-        // 1. Поиск локаций (Part 1)
+        // 1. Поиск локаций
         const locTasks = {
             1: { target: "B1-02-05-A-01", hint: "<p><b>B1</b> — Бакалея.</p><p><b>02</b> — Ряд 2.</p><p><b>05</b> — Стеллаж 5.</p><p><b>A</b> — Нижняя полка.</p>" },
             2: { target: "G1-02-03-D-02", hint: "<p><b>G</b> — ГМЗ (Гастроном).</p><p>❄️ <b>ВНИМАНИЕ:</b> Тут холодно!</p><p>Надень куртку перед тем, как идти в этот ряд.</p>" }
         };
 
-        // 2. Простой заказ (Горошек) (Part 2)
+        // 2. Простой заказ (Горошек)
         const trainingOrder = {
             id: "train_01",
             addr: { sec: "B1", row: "01", rack: "01", shelf: "B", cell: "02" },
@@ -181,7 +180,7 @@
             }
         };
 
-        // 3. Сложный заказ (Бананы + Сметана) (Part 3)
+        // 3. Сложный заказ (Бананы + Сметана)
         const complexOrderItems = [
             {
                 id: 1,
@@ -191,7 +190,7 @@
                     barcode: "2001001",
                     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Banana-Single.jpg/400px-Banana-Single.jpg",
                     qty: 2, // 2 кг
-                    step: 1, // шаг сканирования 1
+                    step: 1, 
                     stepLabel: "шаг продукта-1",
                     stepHint: "Обрати внимание что клиент заказал два килограмма и фасовка по одному киллограмму , тебе надо взять два пакета по килограмму"
                 }
@@ -306,10 +305,8 @@
         // 6. ЭКРАН СБОРКИ (WMS)
         function renderWmsScreen(item) {
             const isTraining = state.orderType === 'training';
-            // Синий вопросик для обучения кнопкам
             const hintMarker = isTraining ? `<div class="hint-marker">?</div>` : ``;
 
-            // Шаг товара
             let stepHtml = '';
             if (item.product.stepLabel) {
                 stepHtml = `
@@ -384,7 +381,7 @@
                         </div>
                     </div>
                     
-                    <button class="dev-btn" onclick="simulateScan('${item.product.barcode}')">[DEV: Correct Scan]</button>
+                    <button class="dev-btn" onclick="simulateScan('${item.product.barcode}')">[DEV: OK]</button>
                 </div>
             `;
             initInput();
@@ -402,7 +399,7 @@
             `;
         }
 
-        // --- ЛОГИКА ПРИЛОЖЕНИЯ ---
+        // --- ЛОГИКА ---
 
         function initInput() {
             setTimeout(() => {
@@ -414,17 +411,17 @@
             }, 300);
         }
 
-        // Старт простого заказа (Горошек)
         function startTrainingOrder() {
             state.orderType = 'training';
+            state.screen = 'picking'; // ВАЖНО: Переключаем режим!
             state.currentItemIndex = 0;
             state.pickedQty = 0;
             renderWmsScreen(trainingOrder);
         }
 
-        // Старт сложного заказа (Бананы + Сметана)
         function startComplexOrder() {
             state.orderType = 'complex';
+            state.screen = 'picking'; // ВАЖНО: Переключаем режим!
             state.currentItemIndex = 0;
             state.pickedQty = 0;
             renderWmsScreen(complexOrderItems[0]);
@@ -438,7 +435,7 @@
             const input = document.getElementById('barcode-input');
             code = code.trim();
 
-            // Логика Части 1 (Поиск локаций)
+            // ЛОГИКА 1: ПОИСК ЛОКАЦИЙ (ONBOARDING)
             if (state.screen === 'locTask1') {
                 if (code === locTasks[1].target) { alert("Верно!"); startLocTask(2); }
                 else { alert("Ошибка! Ищем: " + locTasks[1].target); input.value=""; }
@@ -450,30 +447,32 @@
                 return;
             }
 
-            // Логика Части 2 и 3 (Сборка товаров)
-            let currentItem;
-            if (state.orderType === 'training') currentItem = trainingOrder;
-            else currentItem = complexOrderItems[state.currentItemIndex];
+            // ЛОГИКА 2: СБОРКА ТОВАРОВ (PICKING)
+            if (state.screen === 'picking') {
+                let currentItem;
+                if (state.orderType === 'training') currentItem = trainingOrder;
+                else currentItem = complexOrderItems[state.currentItemIndex];
 
-            if (code === currentItem.product.barcode) {
-                // Успешный скан
-                state.pickedQty += 1;
-                document.getElementById('picked-val').innerText = state.pickedQty;
-                input.value = "";
-                input.focus();
+                if (code === currentItem.product.barcode) {
+                    // Успешный скан
+                    state.pickedQty += 1;
+                    document.getElementById('picked-val').innerText = state.pickedQty;
+                    input.value = "";
+                    input.focus();
 
-                // Если собрали нужное количество
-                if (state.pickedQty >= currentItem.product.qty) {
-                    document.getElementById('qty-box-bg').classList.add('done');
-                    const btn = document.getElementById('btn-confirm');
-                    btn.classList.add('ready');
-                    btn.classList.remove('btn-check');
-                    input.blur();
-                    input.placeholder = "Нажми галочку ✓";
+                    // Если собрали
+                    if (state.pickedQty >= currentItem.product.qty) {
+                        document.getElementById('qty-box-bg').classList.add('done');
+                        const btn = document.getElementById('btn-confirm');
+                        btn.classList.add('ready');
+                        btn.classList.remove('btn-check');
+                        input.blur();
+                        input.placeholder = "Нажми галочку ✓";
+                    }
+                } else {
+                    alert("❌ Неверный товар! \nОжидается ШК: " + currentItem.product.barcode);
+                    input.value = "";
                 }
-            } else {
-                alert("❌ Неверный товар! \nОжидается ШК: " + currentItem.product.barcode);
-                input.value = "";
             }
         }
 
@@ -499,7 +498,7 @@
             }
         }
 
-        // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
+        // --- ВСПОМОГАТЕЛЬНЫЕ ---
         function showHint(htmlText) {
             document.getElementById('hint-title').innerText = "Подсказка";
             document.getElementById('hint-text').innerHTML = htmlText;
@@ -518,7 +517,7 @@
         function closeHint() { document.getElementById('hint-sheet').classList.remove('active'); setTimeout(() => document.getElementById('overlay').style.display = 'none', 300); }
         function simulateScan(code) { checkScan(code); }
 
-        // ЗАПУСК
+        // START
         renderWelcome();
         setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), 1000);
 
