@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Arbuz WMS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Arbuz WMS Training</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
         /* --- БАЗОВЫЕ СТИЛИ --- */
@@ -39,7 +39,7 @@
         .screen.active { display: flex; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- СТИЛИ ОБУЧЕНИЯ (КАРТОЧКИ) --- */
+        /* Типографика и карточки */
         h1 { margin: 0 0 10px 0; font-size: 24px; font-weight: 800; color: #222; text-align: center; }
         p { color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 24px; text-align: center; }
 
@@ -47,6 +47,7 @@
         .card-row { display: flex; align-items: center; margin-bottom: 12px; }
         .card-icon { font-size: 28px; width: 40px; text-align: center; margin-right: 12px; }
         
+        /* Кнопки */
         .btn {
             background: var(--arbuz-green); color: white; border: none; padding: 16px;
             font-size: 18px; font-weight: 700; border-radius: 12px; width: 100%;
@@ -55,7 +56,6 @@
         .btn:active { transform: scale(0.98); }
 
         .addr-badge { color: white; padding: 4px 8px; border-radius: 6px; font-family: monospace; font-weight: bold; margin-right: 12px; min-width: 32px; text-align: center; }
-
         .target-box { background: #E8F5E9; border: 2px dashed var(--arbuz-green); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
         .target-val { font-size: 32px; font-weight: 800; color: #333; font-family: monospace; }
         
@@ -63,53 +63,52 @@
         .scan-input:focus { border-color: var(--arbuz-green); background: #fff; }
         .scan-status { font-size: 13px; color: #888; margin-top: 8px; text-align: center; }
 
-        /* --- 🔥 НОВЫЕ СТИЛИ: БОЕВОЙ ИНТЕРФЕЙС (ПОВТОРЯЕМ СКРИНШОТ) --- */
+        /* --- 🔥 СТИЛИ СБОРКИ (ПОВТОРЯЕМ СКРИНШОТ) --- */
         .wms-header {
-            display: flex; justify-content: space-between; background: white; padding: 10px 15px;
-            border-bottom: 1px solid #eee; margin: -20px -20px 15px -20px; /* Растянуть на всю ширину */
+            display: flex; justify-content: space-between; background: white; padding: 15px 10px;
+            border-bottom: 1px solid #eee; margin: -20px -20px 15px -20px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
         }
-        .wms-addr-block { text-align: center; }
-        .wms-addr-val { font-size: 22px; font-weight: 700; color: #222; display: block; font-family: 'Roboto', sans-serif; }
+        .wms-addr-block { text-align: center; flex: 1; }
+        .wms-addr-val { font-size: 26px; font-weight: 700; color: #222; display: block; font-family: 'Roboto', sans-serif; line-height: 1; margin-bottom: 4px;}
         .wms-addr-lbl { font-size: 11px; color: #999; text-transform: lowercase; }
 
         .wms-product-card {
-            background: white; border-radius: 8px; padding: 12px; display: flex; gap: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px;
+            background: white; border-radius: 8px; padding: 12px; display: flex; gap: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #eee;
         }
-        .prod-info { flex: 1; }
-        .prod-title { font-weight: 700; font-size: 16px; color: #222; margin-bottom: 8px; line-height: 1.2;}
-        .prod-meta { font-size: 12px; color: #777; margin-bottom: 4px; }
-        .prod-img-box { width: 80px; height: 80px; background: #f9f9f9; display: flex; align-items: center; justify-content: center; border-radius: 4px; }
-        .prod-img { font-size: 40px; } /* Эмодзи вместо фото */
+        .prod-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .prod-title { font-weight: 700; font-size: 15px; color: #222; line-height: 1.3; }
+        .prod-meta { font-size: 12px; color: #777; }
+        .prod-station { font-size: 12px; color: #333; font-weight: 600; margin-top: 4px; }
+        
+        .prod-img-box { width: 90px; height: 90px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .prod-img { width: 100%; height: 100%; object-fit: contain; }
 
-        /* Счетчики */
-        .counters-row { display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-end; }
+        .counters-row { display: flex; gap: 15px; margin-bottom: 25px; align-items: flex-end; }
         .qty-box { flex: 1; text-align: center; border-radius: 8px; padding: 10px; position: relative; height: 70px; display: flex; align-items: center; justify-content: center; }
         .qty-label { position: absolute; top: -20px; left: 0; width: 100%; font-size: 12px; color: #777; text-align: center; }
         
-        .qty-red { background: var(--arbuz-red); color: white; box-shadow: 0 4px 10px rgba(226, 30, 44, 0.3); }
-        .qty-val { font-size: 36px; font-weight: 700; }
-        
+        .qty-red { background: var(--arbuz-red); color: white; box-shadow: 0 4px 12px rgba(226, 30, 44, 0.25); }
+        .qty-val { font-size: 38px; font-weight: 700; }
         .qty-white { background: white; border: 2px solid var(--arbuz-green); color: var(--arbuz-green); box-sizing: border-box; }
 
-        /* Нижние кнопки (Круглые) */
         .bottom-actions { 
             display: flex; justify-content: space-between; margin-top: auto; 
-            padding-top: 10px; border-top: 1px solid #eee;
+            padding-top: 15px; padding-bottom: 10px;
         }
-        .action-item { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 60px; }
+        .action-item { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 70px; cursor: pointer;}
         .circle-btn {
-            width: 50px; height: 50px; border-radius: 50%; border: none;
+            width: 56px; height: 56px; border-radius: 50%; border: none;
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px; cursor: pointer; transition: transform 0.1s;
+            font-size: 24px; transition: transform 0.1s;
         }
         .circle-btn:active { transform: scale(0.95); }
-        .btn-gray { background: #E0E0E0; color: #555; }
-        .btn-check { background: #E0E0E0; color: #999; } /* Неактивна сначала */
+        .btn-gray { background: #E0E0E0; color: #666; }
+        .btn-check { background: #E0E0E0; color: #999; }
         .btn-check.ready { background: var(--arbuz-green); color: white; box-shadow: 0 4px 10px rgba(0,160,70,0.3); }
-        .act-label { font-size: 10px; color: #999; }
+        .act-label { font-size: 11px; color: #999; text-align: center; line-height: 1.2;}
 
-        /* Модалка */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 90; display: none; }
         .bottom-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: white; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 24px; box-sizing: border-box; transition: bottom 0.3s; z-index: 100; }
         .bottom-sheet.active { bottom: 0; }
@@ -132,65 +131,53 @@
     <div class="overlay" id="overlay" onclick="closeHint()"></div>
     <div class="bottom-sheet" id="hint-sheet">
         <h3 style="margin-top:0; text-align:center;" id="hint-title">Подсказка</h3>
-        <div id="hint-text"></div>
+        <div id="hint-text" style="line-height: 1.6; color: #444;"></div>
         <button class="btn" style="padding: 12px;" onclick="closeHint()">Понятно</button>
     </div>
 
     <script>
-        // --- ДАННЫЕ И СОСТОЯНИЕ ---
-        let currentScreen = 'welcome';
-        let startTime;
-        
-        // Данные заданий
+        // --- ДАННЫЕ ---
         const tasks = {
-            1: {
-                target: "B1-02-05-A-01",
-                hint: "<p><b>B1</b> — Бакалея.</p><p><b>02</b> — Ряд 2.</p><p><b>05</b> — Стеллаж 5.</p><p><b>A</b> — Нижняя полка.</p>"
-            },
-            2: {
-                target: "G1-02-03-D-02",
-                hint: "<p><b>G</b> — это ГМЗ (Гастроном).</p><p>❄️ <b>ВНИМАНИЕ:</b> Там очень холодно!</p><p>Надень куртку, прежде чем идти искать ряд <b>02</b>.</p>"
-            },
-            3: {
-                // Реальный заказ
-                target: "B1-01-01-B-02", // Локация
-                productBarcode: "2510055", // Штрихкод горошка
-                productName: "Горошек Bonduelle консервированный, 425 мл"
+            1: { target: "B1-02-05-A-01", hint: "<p><b>B1</b> — Бакалея.</p><p><b>02</b> — Ряд 2.</p><p><b>05</b> — Стеллаж 5.</p><p><b>A</b> — Нижняя полка.</p>" },
+            2: { target: "G1-02-03-D-02", hint: "<p><b>G</b> — ГМЗ (Гастроном).</p><p>❄️ <b>ВНИМАНИЕ:</b> Тут холодно!</p><p>Надень куртку перед тем, как идти в этот ряд.</p>" },
+            3: { 
+                target: "B1-01-01-B-02", 
+                // РЕАЛЬНЫЙ ШТРИХКОД
+                productBarcode: "3083680048774", 
+                productName: "Горошек Bonduelle консервированный, 425 мл",
+                imgUrl: "https://bonduelle.ru/upload/iblock/d76/d7645063714b2d3550e5670868516d7a.png" 
             }
         };
 
-        // --- ГЕНЕРАЦИЯ ЭКРАНОВ ---
-        
+        // --- ШАБЛОНЫ ЭКРАНОВ ---
         const screens = {
-            // 1. ПРИВЕТСТВИЕ
+            // 1. WELCOME
             welcome: `
                 <div class="screen active" style="text-align: center; margin-top: 30px;">
                     <div style="font-size: 60px; margin-bottom: 10px;">🍉</div>
                     <h1>Привет, стажёр!</h1>
-                    <p>Добро пожаловать в команду.<br>Чтобы быстро собирать заказы, нужно понимать, как устроен наш склад.</p>
+                    <p>Добро пожаловать в команду.<br>Научимся работать со сканером и собирать заказы.</p>
                     <button class="btn" onclick="renderScreen('zones')">Начать обучение 🚀</button>
                 </div>
             `,
-
-            // 2. ЗОНЫ
+            // 2. ZONES
             zones: `
                 <div class="screen active">
                     <h1>Регионы склада</h1>
-                    <p>Наш склад — это как страна с 5 регионами:</p>
-                    <div class="card"><div class="card-row"><div class="card-icon">🍝</div><div><b>B — Бакалея (Food)</b><br><span style="font-size:13px; color:#777;">Крупы, консервы</span></div></div></div>
-                    <div class="card"><div class="card-row"><div class="card-icon">🧴</div><div><b>M — Химия (Non Food)</b><br><span style="font-size:13px; color:#777;">Бытовая химия</span></div></div></div>
-                    <div class="card"><div class="card-row"><div class="card-icon">🍉</div><div><b>F — Фреш</b><br><span style="font-size:13px; color:#777;">Свежие фрукты</span></div></div></div>
-                    <div class="card"><div class="card-row"><div class="card-icon">🍦</div><div><b>G — ГМЗ</b><br><span style="font-size:13px; color:#777;">Молочка, заморозка</span></div></div></div>
-                    <div class="card"><div class="card-row"><div class="card-icon">💊</div><div><b>PH — Аптека</b><br><span style="font-size:13px; color:#777;">Лекарства</span></div></div></div>
+                    <p>5 главных отделов хранения:</p>
+                    <div class="card"><div class="card-row"><div class="card-icon">🍝</div><div><b>B — Бакалея (Food)</b><br><span style="font-size:12px; color:#777;">Крупы, консервы</span></div></div></div>
+                    <div class="card"><div class="card-row"><div class="card-icon">🧴</div><div><b>M — Химия (Non Food)</b><br><span style="font-size:12px; color:#777;">Бытовая химия</span></div></div></div>
+                    <div class="card"><div class="card-row"><div class="card-icon">🍉</div><div><b>F — Фреш</b><br><span style="font-size:12px; color:#777;">Свежие фрукты</span></div></div></div>
+                    <div class="card"><div class="card-row"><div class="card-icon">🍦</div><div><b>G — ГМЗ</b><br><span style="font-size:12px; color:#777;">Молочка, заморозка</span></div></div></div>
+                    <div class="card"><div class="card-row"><div class="card-icon">💊</div><div><b>PH — Аптека</b><br><span style="font-size:12px; color:#777;">Лекарства</span></div></div></div>
                     <button class="btn" onclick="renderScreen('address')">Всё понятно 👉</button>
                 </div>
             `,
-
-            // 3. СТРУКТУРА АДРЕСА
+            // 3. ADDRESS
             address: `
                 <div class="screen active">
                     <h1>Адрес ячейки</h1>
-                    <p>Представь, что ищешь друга в городе:</p>
+                    <p>Принцип "Города":</p>
                     <div class="target-box" style="padding:10px;"><span style="font-family:monospace; font-weight:bold; font-size:20px;">B1-02-05-A-01</span></div>
                     <div class="card">
                         <div class="card-row"><span class="addr-badge" style="background:#FF5722;">B1</span><div><b>Город</b> (Отдел)</div></div>
@@ -202,58 +189,55 @@
                     <button class="btn" onclick="startTask(1)">Запомнил, к практике! 🔥</button>
                 </div>
             `,
-
-            // 4. ЗАДАНИЕ 1 (Бакалея)
+            // 4. TASK 1 (B)
             task1: `
                 <div class="screen active">
                     <h1>Задание №1</h1>
-                    <p>Найди этот адрес и "пикни" его сканером:</p>
+                    <p>Найди адрес и сканируй:</p>
                     <div class="target-box">
-                        <div style="font-size:12px; color:#E65100; font-weight:bold; margin-bottom:5px;">ЦЕЛЬ ПОИСКА</div>
+                        <div style="font-size:12px; color:#E65100; font-weight:bold; margin-bottom:5px;">ЦЕЛЬ</div>
                         <div class="target-val">${tasks[1].target}</div>
                     </div>
                     <div class="hint-btn" onclick="showHint(1)">🤔 Подсказка</div>
                     <div style="margin-top:10px;">
-                        <input type="text" id="barcode-input" class="scan-input" placeholder="Сканируй ячейку..." autocomplete="off">
+                        <input type="text" id="barcode-input" class="scan-input" placeholder="Сканируй..." autocomplete="off">
                         <div class="scan-status">Нажми кнопку сканирования</div>
                     </div>
-                    <button class="dev-btn" onclick="simulateScan('${tasks[1].target}')">[DEV: Scan Correct]</button>
+                    <button class="dev-btn" onclick="simulateScan('${tasks[1].target}')">[DEV: OK]</button>
                 </div>
             `,
-
-            // 5. ЗАДАНИЕ 2 (Холод)
+            // 5. TASK 2 (G - Cold)
             task2: `
                 <div class="screen active">
                     <h1>Задание №2</h1>
-                    <p>Теперь найди следующую ячейку:</p>
+                    <p>Следующая ячейка:</p>
                     <div class="target-box" style="border-color:#2196F3; background:#E3F2FD;">
-                        <div style="font-size:12px; color:#1565C0; font-weight:bold; margin-bottom:5px;">ЦЕЛЬ ПОИСКА</div>
+                        <div style="font-size:12px; color:#1565C0; font-weight:bold; margin-bottom:5px;">ЦЕЛЬ</div>
                         <div class="target-val">${tasks[2].target}</div>
                     </div>
                     <div class="hint-btn" onclick="showHint(2)">❄️ Куда идти?</div>
                     <div style="margin-top:10px;">
-                        <input type="text" id="barcode-input" class="scan-input" placeholder="Сканируй ячейку..." autocomplete="off">
+                        <input type="text" id="barcode-input" class="scan-input" placeholder="Сканируй..." autocomplete="off">
                         <div class="scan-status">Нажми кнопку сканирования</div>
                     </div>
-                    <button class="dev-btn" onclick="simulateScan('${tasks[2].target}')">[DEV: Scan Correct]</button>
+                    <button class="dev-btn" onclick="simulateScan('${tasks[2].target}')">[DEV: OK]</button>
                 </div>
             `,
-
-            // 6. ФИНАЛ ОНБОРДИНГА
+            // 6. ONBOARDING SUCCESS
             onboarding_complete: `
                 <div class="screen active" style="text-align: center; justify-content:center; height:100%;">
-                    <div style="font-size: 70px; margin-bottom: 10px;">🎓</div>
+                    <div style="font-size: 70px; margin-bottom: 20px;">🎓</div>
                     <h1 style="color: var(--arbuz-green);">Первый этап пройден!</h1>
-                    <p>Поздравляем! Ты изучил зоны и научился находить ячейки.</p>
-                    <p style="margin-top:20px;"><b>А теперь представь, что ты получил первый реальный заказ на сборку.</b></p>
-                    <p>Готов начать?</p>
-                    <button class="btn" onclick="startRealOrder()">Начать сборку 📦</button>
+                    <p>Ты изучил зоны и научился находить ячейки.</p>
+                    <div class="card" style="margin-top:20px; background:#E8F5E9;">
+                        <p style="margin:0; color:#2e7d32;"><b>Представь:</b><br>Ты получил первый реальный заказ на сборку.</p>
+                    </div>
+                    <button class="btn" style="background:#00A046; color:white; margin-top:30px;" onclick="renderScreen('real_order')">Начать отбор 📦</button>
                 </div>
             `,
-
-            // 7. РЕАЛЬНЫЙ ЗАКАЗ (UI СО СКРИНШОТА)
+            // 7. REAL ORDER (UI СКРИНШОТА)
             real_order: `
-                <div class="screen active" style="padding: 0;">
+                <div class="screen active" style="padding:0;">
                     <div class="wms-header">
                         <div class="wms-addr-block"><span class="wms-addr-val">B1</span><span class="wms-addr-lbl">секция</span></div>
                         <div class="wms-addr-block"><span class="wms-addr-val">01</span><span class="wms-addr-lbl">ряд</span></div>
@@ -269,15 +253,17 @@
                             <div class="prod-info">
                                 <div class="prod-title">${tasks[3].productName}</div>
                                 <div class="prod-meta">Штрихкоды: ${tasks[3].productBarcode}</div>
-                                <div class="prod-meta">Комментарий: ""</div>
-                                <div class="prod-meta">Станция: <b>Станция 10</b></div>
+                                <div class="prod-meta">Комментарий: "8701531..."</div>
+                                <div class="prod-station">Станция: Станция 10</div>
                             </div>
-                            <div class="prod-img-box"><span class="prod-img">🥫</span></div>
+                            <div class="prod-img-box">
+                                <img src="${tasks[3].imgUrl}" class="prod-img" alt="Горошек">
+                            </div>
                         </div>
 
-                        <div style="display:flex; gap:10px; margin-bottom:20px;">
+                        <div style="display:flex; gap:8px; margin-bottom:20px;">
                             <input type="text" id="barcode-input" class="scan-input" style="text-align:left; font-size:16px;" placeholder="Отсканируйте штрихкод">
-                            <button style="background:white; border:1px solid #ddd; border-radius:8px; width:50px; font-size:20px;">→</button>
+                            <button style="background:white; border:1px solid #ddd; border-radius:8px; width:50px; font-size:20px; color:#666;">→</button>
                         </div>
 
                         <div class="counters-row">
@@ -294,46 +280,43 @@
                     </div>
 
                     <div class="bottom-actions" style="padding: 10px 20px;">
-                        <div class="action-item">
-                            <button class="circle-btn btn-gray" onclick="alert('Назад нельзя, заказ активен')">←</button>
+                        <div class="action-item" onclick="alert('Это кнопка Назад')">
+                            <button class="circle-btn btn-gray">←</button>
                             <span class="act-label">Назад</span>
                         </div>
-                        <div class="action-item">
+                        <div class="action-item" onclick="showReplaceHint()">
                             <button class="circle-btn btn-gray">↻</button>
                             <span class="act-label">Заменить</span>
                         </div>
-                        <div class="action-item">
-                            <button class="circle-btn btn-check" id="btn-confirm" onclick="finishRealOrder()">✓</button>
+                        <div class="action-item" onclick="finishRealOrder()">
+                            <button class="circle-btn btn-check" id="btn-confirm">✓</button>
                             <span class="act-label">Подтвердить</span>
                         </div>
-                        <div class="action-item">
+                        <div class="action-item" onclick="showNotFoundHint()">
                             <button class="circle-btn btn-gray">✕</button>
                             <span class="act-label">Не найден</span>
                         </div>
                     </div>
-                     <button class="dev-btn" onclick="simulateScan('2510055')">[DEV: Scan Product]</button>
+                    <button class="dev-btn" onclick="simulateScan('${tasks[3].productBarcode}')">[DEV: Scan Product]</button>
                 </div>
             `,
-
-            // 8. УСПЕХ ЗАКАЗА
-            order_success: `
+            // 8. FINAL SUCCESS
+            final_success: `
                 <div class="screen active" style="text-align: center; justify-content:center; height:100%;">
-                    <div style="font-size: 70px; margin-bottom: 10px;">✅</div>
+                    <div style="font-size: 70px; margin-bottom: 20px;">✅</div>
                     <h1 style="color: var(--arbuz-green);">Заказ собран!</h1>
-                    <p>Ты успешно отобрал горошек.<br>Так выглядит работа комплектовщика.</p>
-                    <button class="btn" onclick="location.reload()">Начать сначала 🔄</button>
+                    <p>Ты успешно отобрал горошек.<br>Так работает наш WMS.</p>
+                    <button class="btn" onclick="location.reload()">Начать заново 🔄</button>
                 </div>
             `
         };
 
         // --- ЛОГИКА ---
+        let currentScreen = '';
 
-        function renderScreen(screenName) {
-            const contentDiv = document.getElementById('main-content');
-            contentDiv.innerHTML = screens[screenName];
-            currentScreen = screenName;
-            
-            // Если экран с вводом, ставим фокус
+        function renderScreen(name) {
+            currentScreen = name;
+            document.getElementById('main-content').innerHTML = screens[name];
             const input = document.getElementById('barcode-input');
             if (input) {
                 setTimeout(() => input.focus(), 500);
@@ -341,17 +324,30 @@
             }
         }
 
-        function startTask(num) {
-            renderScreen('task' + num);
+        function startTask(n) { renderScreen('task' + n); }
+        
+        // Всплывающие подсказки
+        function showHint(n) {
+            document.getElementById('hint-title').innerText = n === 2 ? "Внимание!" : "Подсказка";
+            document.getElementById('hint-text').innerHTML = tasks[n].hint;
+            openOverlay();
         }
 
-        function startRealOrder() {
-            renderScreen('real_order');
+        function showReplaceHint() {
+            document.getElementById('hint-title').innerText = "Кнопка «Заменить»";
+            document.getElementById('hint-text').innerHTML = 
+                "Если ты пришел к нужной ячейке, а товара нет, и эта кнопка <b>активна</b> — ты должен сделать замену товара на похожий и сообщить об этом супервайзеру.";
+            openOverlay();
         }
 
-        function showHint(taskNum) {
-            document.getElementById('hint-title').innerText = taskNum === 2 ? "Холодная зона!" : "Подсказка";
-            document.getElementById('hint-text').innerHTML = tasks[taskNum].hint;
+        function showNotFoundHint() {
+            document.getElementById('hint-title').innerText = "Кнопка «Не найден»";
+            document.getElementById('hint-text').innerHTML = 
+                "Если товара нет, а кнопка «Заменить» <b>НЕ активна</b> — значит клиент не хочет замену. Нажми «Не найден» и собирай дальше.";
+            openOverlay();
+        }
+
+        function openOverlay() {
             document.getElementById('overlay').style.display = 'block';
             setTimeout(() => document.getElementById('hint-sheet').classList.add('active'), 10);
         }
@@ -363,85 +359,54 @@
             if(input) input.focus();
         }
 
-        // ОБРАБОТКА СКАНИРОВАНИЯ
         function handleEnter(e) {
-            if (e.key === 'Enter' || e.keyCode === 13) {
-                checkScan(e.target.value);
-            }
+            if (e.key === 'Enter' || e.keyCode === 13) checkScan(e.target.value);
         }
 
         function checkScan(code) {
             code = code.trim();
             const input = document.getElementById('barcode-input');
 
-            // Логика для Задания 1
             if (currentScreen === 'task1') {
-                if (code === tasks[1].target) {
-                    alert("✅ Верно! Идем дальше.");
-                    startTask(2);
-                } else {
-                    alert("❌ Ошибка. Ищем: " + tasks[1].target);
-                    input.value = "";
-                }
-            }
-            // Логика для Задания 2
+                if (code === tasks[1].target) { alert("Верно!"); startTask(2); } 
+                else { alert("Ошибка! Ищем: " + tasks[1].target); input.value=""; }
+            } 
             else if (currentScreen === 'task2') {
-                if (code === tasks[2].target) {
-                    renderScreen('onboarding_complete');
-                } else {
-                    alert("❌ Ошибка. Ищем: " + tasks[2].target);
-                    input.value = "";
-                }
+                if (code === tasks[2].target) { renderScreen('onboarding_complete'); }
+                else { alert("Ошибка! Ищем: " + tasks[2].target); input.value=""; }
             }
-            // Логика для Реального Заказа (сканируем товар)
             else if (currentScreen === 'real_order') {
                 if (code === tasks[3].productBarcode) {
-                    // Анимация успеха в интерфейсе
                     document.getElementById('picked-val').innerText = "1";
                     const btn = document.getElementById('btn-confirm');
                     btn.classList.add('ready');
-                    btn.classList.remove('btn-check'); // убираем серый
-                    
-                    // Блокируем инпут
-                    input.style.borderColor = "#00A046";
-                    input.style.backgroundColor = "#E8F5E9";
+                    btn.classList.remove('btn-check');
                     input.blur();
-
-                    // Можно автоматически завершить или ждать нажатия кнопки
-                    setTimeout(() => {
-                        // alert("Товар отобран! Подтвердите.");
-                    }, 500);
+                    input.style.background = "#E8F5E9";
+                    input.value = "OK: " + code;
                 } else {
-                    alert("❌ Не тот товар! Нужен штрихкод: " + tasks[3].productBarcode);
-                    input.value = "";
+                    alert("Не тот товар! Штрихкод: " + tasks[3].productBarcode);
+                    input.value="";
                 }
             }
         }
 
         function finishRealOrder() {
             if (document.getElementById('picked-val').innerText === "1") {
-                renderScreen('order_success');
+                renderScreen('final_success');
             } else {
-                alert("Сначала отсканируйте товар!");
+                alert("Сначала отсканируй товар!");
             }
         }
 
-        // Тестовая функция
         function simulateScan(code) {
             const input = document.getElementById('barcode-input');
-            if(input) {
-                input.value = code;
-                checkScan(code);
-            }
+            if(input) { input.value = code; checkScan(code); }
         }
 
-        // Старт с приветствия
+        // START
         renderScreen('welcome');
-
-        // Часы
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }, 1000);
+        setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), 1000);
 
     </script>
 </body>
