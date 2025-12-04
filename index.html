@@ -71,7 +71,7 @@
         .prod-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
         .prod-title { font-weight: 700; font-size: 15px; color: #222; line-height: 1.3; }
         .prod-meta { font-size: 12px; color: #777; }
-        .prod-img-box { width: 90px; height: 90px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .prod-img-box { width: 90px; height: 90px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #fff; }
         .prod-img { width: 100%; height: 100%; object-fit: contain; }
 
         .counters-row { display: flex; gap: 15px; margin-bottom: 25px; align-items: flex-end; }
@@ -108,10 +108,15 @@
             border: 2px solid white; animation: pulseBlue 2s infinite;
         }
 
+        .step-help-icon {
+            cursor: pointer; background: #E3F2FD; border-radius: 50%; width: 20px; height: 20px; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            font-weight: bold; font-size: 12px; color: #1976D2; border: 1px solid #BBDEFB;
+        }
+
         @keyframes pulseGreen { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         @keyframes pulseBlue { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-        /* Модалка */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 90; display: none; }
         .bottom-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: white; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 24px; box-sizing: border-box; transition: bottom 0.3s; z-index: 100; }
         .bottom-sheet.active { bottom: 0; }
@@ -122,7 +127,7 @@
 
     <div class="device-screen">
         <div class="status-bar">
-            <span>Arbuz WMS v3.0</span>
+            <span>Arbuz WMS v3.1</span>
             <span id="clock">10:00</span>
         </div>
 
@@ -138,21 +143,20 @@
     </div>
 
     <script>
-        // --- КОНФИГУРАЦИЯ ЗАКАЗОВ ---
+        // --- ДАННЫЕ С РАБОЧИМИ КАРТИНКАМИ ---
         
-        // Простой заказ (Горошек) - Обучение кнопкам
         const trainingOrder = {
             id: "train_01",
             addr: { sec: "B1", row: "01", rack: "01", shelf: "B", cell: "02" },
             product: {
                 name: "Горошек Bonduelle консервированный, 425 мл",
-                barcode: "3083680048774", // Реальный ШК
-                img: "https://bonduelle.ru/upload/iblock/d76/d7645063714b2d3550e5670868516d7a.png",
+                barcode: "3083680048774", 
+                // Стабильная ссылка OpenFoodFacts
+                img: "https://static.openfoodfacts.org/images/products/308/368/103/5230/front_ru.10.400.jpg",
                 qty: 1
             }
         };
 
-        // Сложный заказ (Бананы + Сметана)
         const complexOrderItems = [
             {
                 id: 1,
@@ -160,9 +164,12 @@
                 product: {
                     name: "Бананы (Весовые)",
                     barcode: "2001001",
-                    img: "https://arbuz.kz/image/s3/arbuz-kz-products/19532-banany_kg.jpg?w=1100&h=1100&_c=1687157640",
-                    qty: 2, // 2 кг
-                    step: 1 // шаг сканирования 1
+                    // Стабильная ссылка Wikipedia
+                    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Banana-Single.jpg/400px-Banana-Single.jpg",
+                    qty: 2, 
+                    step: 1, 
+                    stepLabel: "шаг продукта-1",
+                    stepHint: "Обрати внимание: клиент заказал 2 кг, а фасовка по 1 кг. Тебе нужно взять 2 пакета по 1 кг."
                 }
             },
             {
@@ -171,7 +178,8 @@
                 product: {
                     name: "Сметана President 15%, 400 г",
                     barcode: "4870055001231",
-                    img: "https://arbuz.kz/image/s3/arbuz-kz-products/21535-smetana_president_15_400_g.jpg?w=1100&h=1100&_c=1689658705",
+                    // Стабильная ссылка OpenFoodFacts
+                    img: "https://static.openfoodfacts.org/images/products/487/005/500/1231/front_ru.3.400.jpg",
                     qty: 1,
                     step: 1
                 }
@@ -181,12 +189,12 @@
         // --- СОСТОЯНИЕ ---
         let state = {
             screen: 'welcome',
-            orderType: null, // 'training' or 'complex'
+            orderType: null, 
             currentItemIndex: 0,
             pickedQty: 0
         };
 
-        // --- РЕНДЕР ЭКРАНОВ ---
+        // --- РЕНДЕР ---
         
         function renderWelcome() {
             document.getElementById('main-content').innerHTML = `
@@ -212,9 +220,17 @@
 
         function renderOrderScreen(item) {
             const isTraining = state.orderType === 'training';
-            
-            // Добавляем индикаторы подсказок только для тренировочного режима
             const hintMarker = isTraining ? `<div class="hint-marker">?</div>` : ``;
+
+            let stepHtml = '';
+            if (item.product.stepLabel) {
+                stepHtml = `
+                    <div style="font-size:13px; color:#1976D2; margin-top:5px; font-weight:600; display:flex; align-items:center; gap:6px;">
+                        ${item.product.stepLabel} 
+                        <div class="step-help-icon" onclick="showProductHint('${item.product.stepHint}')">?</div>
+                    </div>
+                `;
+            }
 
             document.getElementById('main-content').innerHTML = `
                 <div class="screen active" style="padding:0;">
@@ -233,10 +249,11 @@
                             <div class="prod-info">
                                 <div class="prod-title">${item.product.name}</div>
                                 <div class="prod-meta">ШК: ${item.product.barcode}</div>
-                                ${item.product.qty > 1 ? '<div style="color:#E65100; font-size:12px; font-weight:bold;">⚠️ Сканируй каждую единицу! (2 раза)</div>' : ''}
+                                ${stepHtml}
+                                ${item.product.qty > 1 && !item.product.stepLabel ? '<div style="color:#E65100; font-size:12px; font-weight:bold; margin-top:4px;">⚠️ Сканируй каждую единицу!</div>' : ''}
                             </div>
                             <div class="prod-img-box">
-                                <img src="${item.product.img}" class="prod-img">
+                                <img src="${item.product.img}" class="prod-img" alt="Product">
                             </div>
                         </div>
 
@@ -283,7 +300,6 @@
                 </div>
             `;
             
-            // Фокус и энтер
             setTimeout(() => {
                 const inp = document.getElementById('barcode-input');
                 if(inp) {
@@ -332,17 +348,13 @@
             else currentItem = complexOrderItems[state.currentItemIndex];
 
             if (code.trim() === currentItem.product.barcode) {
-                // Успешный скан
-                state.pickedQty += 1; // Всегда +1 шаг
-                
-                // Обновляем UI
+                // Успех
+                state.pickedQty += 1;
                 document.getElementById('picked-val').innerText = state.pickedQty;
                 input.value = "";
                 input.focus();
 
-                // Проверка завершения строки
                 if (state.pickedQty >= currentItem.product.qty) {
-                    // Строка собрана
                     document.getElementById('qty-box-bg').classList.add('done');
                     const btn = document.getElementById('btn-confirm');
                     btn.classList.add('ready');
@@ -367,11 +379,9 @@
                 renderSuccess("Вы освоили кнопки и собрали простой заказ.", "Перейти к Сложному заказу 🔥", "startComplexOrder()");
             } 
             else if (state.orderType === 'complex') {
-                // Если это был последний товар
                 if (state.currentItemIndex >= complexOrderItems.length - 1) {
                     renderSuccess("Сложный заказ из 2 позиций собран!", "Закончить смену 🏠", "location.reload()");
                 } else {
-                    // Переход к следующему товару
                     state.currentItemIndex++;
                     state.pickedQty = 0;
                     alert("Позиция принята! Следующий товар...");
@@ -380,7 +390,6 @@
             }
         }
 
-        // --- ПОДСКАЗКИ ---
         function showReplaceHint() {
             document.getElementById('hint-title').innerText = "Кнопка «Заменить»";
             document.getElementById('hint-text').innerHTML = 
@@ -395,11 +404,16 @@
             openOverlay();
         }
 
+        function showProductHint(text) {
+            document.getElementById('hint-title').innerText = "Особенность товара";
+            document.getElementById('hint-text').innerText = text;
+            openOverlay();
+        }
+
         function openOverlay() { document.getElementById('overlay').style.display = 'block'; setTimeout(() => document.getElementById('hint-sheet').classList.add('active'), 10); }
         function closeHint() { document.getElementById('hint-sheet').classList.remove('active'); setTimeout(() => document.getElementById('overlay').style.display = 'none', 300); }
         function simulateScan(code) { checkScan(code); }
 
-        // START
         renderWelcome();
         setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), 1000);
 
