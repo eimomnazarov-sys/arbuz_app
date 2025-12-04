@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Arbuz WMS Pro</title>
+    <title>Arbuz WMS Academy</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
-        /* --- БАЗОВЫЕ СТИЛИ --- */
+        /* --- БАЗОВЫЕ НАСТРОЙКИ (Стиль Zebra) --- */
         :root {
             --arbuz-green: #00A046;
             --arbuz-red: #E21E2C;
             --dark-ui: #212121;
             --screen-bg: #F5F5F5;
+            --hint-blue: #2196F3;
         }
 
         body {
@@ -39,22 +40,26 @@
         .screen.active { display: flex; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Типографика и карточки */
+        /* Типографика */
         h1 { margin: 0 0 10px 0; font-size: 24px; font-weight: 800; color: #222; text-align: center; }
         p { color: #555; font-size: 16px; line-height: 1.5; margin-bottom: 24px; text-align: center; }
 
+        /* Карточки обучения */
         .card { background: white; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .card-row { display: flex; align-items: center; margin-bottom: 12px; }
+        .card-row:last-child { margin-bottom: 0; }
+        .card-icon { font-size: 28px; width: 40px; text-align: center; margin-right: 12px; }
+
+        /* Кнопки */
         .btn {
             background: var(--arbuz-green); color: white; border: none; padding: 16px;
             font-size: 18px; font-weight: 700; border-radius: 12px; width: 100%;
             cursor: pointer; box-shadow: 0 4px 10px rgba(0,160,70,0.3); margin-top: 20px;
         }
         .btn:active { transform: scale(0.98); }
+        .dev-btn { position: absolute; bottom: 5px; right: 5px; opacity: 0.15; font-size: 11px; z-index: 999; border: 1px solid #333; padding: 2px 5px; background: #eee; }
 
-        .scan-input { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; font-family: monospace; outline: none; text-align: center; }
-        .scan-input:focus { border-color: var(--arbuz-green); background: #fff; }
-
-        /* --- СБОРКА ЗАКАЗА --- */
+        /* --- СТИЛИ WMS (СБОРКА) --- */
         .wms-header {
             display: flex; justify-content: space-between; background: white; padding: 15px 10px;
             border-bottom: 1px solid #eee; margin: -20px -20px 15px -20px; 
@@ -71,18 +76,23 @@
         .prod-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
         .prod-title { font-weight: 700; font-size: 15px; color: #222; line-height: 1.3; }
         .prod-meta { font-size: 12px; color: #777; }
-        .prod-img-box { width: 90px; height: 90px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #fff; }
+        .prod-img-box { width: 90px; height: 90px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #fff; border-radius: 4px; border: 1px solid #f0f0f0; }
         .prod-img { width: 100%; height: 100%; object-fit: contain; }
 
+        /* Поле ввода */
+        .scan-input { width: 100%; padding: 15px; font-size: 18px; border: 2px solid #ddd; border-radius: 10px; box-sizing: border-box; font-family: monospace; outline: none; text-align: center; }
+        .scan-input:focus { border-color: var(--arbuz-green); background: #fff; }
+
+        /* Счетчики */
         .counters-row { display: flex; gap: 15px; margin-bottom: 25px; align-items: flex-end; }
         .qty-box { flex: 1; text-align: center; border-radius: 8px; padding: 10px; position: relative; height: 70px; display: flex; align-items: center; justify-content: center; }
         .qty-label { position: absolute; top: -20px; left: 0; width: 100%; font-size: 12px; color: #777; text-align: center; }
-        
         .qty-red { background: var(--arbuz-red); color: white; box-shadow: 0 4px 12px rgba(226, 30, 44, 0.25); transition: background 0.3s; }
         .qty-red.done { background: var(--arbuz-green); }
         .qty-val { font-size: 38px; font-weight: 700; }
         .qty-white { background: white; border: 2px solid var(--arbuz-green); color: var(--arbuz-green); box-sizing: border-box; }
 
+        /* Нижние кнопки */
         .bottom-actions { 
             display: flex; justify-content: space-between; margin-top: auto; 
             padding-top: 15px; padding-bottom: 10px;
@@ -99,35 +109,43 @@
         .btn-check.ready { background: var(--arbuz-green); color: white; box-shadow: 0 4px 10px rgba(0,160,70,0.3); animation: pulseGreen 2s infinite; }
         .act-label { font-size: 11px; color: #999; text-align: center; line-height: 1.2;}
 
-        /* 🔥 СТИЛИ ПОДСКАЗКИ НА КНОПКАХ */
+        /* 🔥 ПОДСКАЗКИ */
         .hint-marker {
             position: absolute; top: -2px; right: -2px;
-            background: #2196F3; color: white; border-radius: 50%;
+            background: var(--hint-blue); color: white; border-radius: 50%;
             width: 18px; height: 18px; font-size: 12px; font-weight: bold;
             display: flex; align-items: center; justify-content: center;
             border: 2px solid white; animation: pulseBlue 2s infinite;
         }
-
+        
+        /* Значок вопроса рядом с шагом товара */
         .step-help-icon {
             cursor: pointer; background: #E3F2FD; border-radius: 50%; width: 20px; height: 20px; 
             display: inline-flex; align-items: center; justify-content: center; 
-            font-weight: bold; font-size: 12px; color: #1976D2; border: 1px solid #BBDEFB;
+            font-weight: bold; font-size: 12px; color: #1976D2; border: 1px solid #BBDEFB; margin-left: 5px;
         }
 
+        /* Анимации */
         @keyframes pulseGreen { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         @keyframes pulseBlue { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
+        /* Модальные окна */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 90; display: none; }
         .bottom-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: white; border-top-left-radius: 20px; border-top-right-radius: 20px; padding: 24px; box-sizing: border-box; transition: bottom 0.3s; z-index: 100; }
         .bottom-sheet.active { bottom: 0; }
-        .dev-btn { position: absolute; bottom: 5px; right: 5px; opacity: 0.1; font-size: 10px; z-index: 999;}
+        
+        /* Бейджи для адреса */
+        .addr-badge { color: white; padding: 4px 8px; border-radius: 6px; font-family: monospace; font-weight: bold; margin-right: 12px; min-width: 32px; text-align: center; }
+        .target-box { background: #E8F5E9; border: 2px dashed var(--arbuz-green); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px; }
+        .target-val { font-size: 32px; font-weight: 800; color: #333; font-family: monospace; }
+        .hint-btn { color: #1976D2; font-weight: 600; cursor: pointer; text-align: center; padding: 10px; display: block;}
     </style>
 </head>
 <body>
 
     <div class="device-screen">
         <div class="status-bar">
-            <span>Arbuz WMS v3.1</span>
+            <span>Arbuz WMS v4.0</span>
             <span id="clock">10:00</span>
         </div>
 
@@ -138,25 +156,32 @@
     <div class="overlay" id="overlay" onclick="closeHint()"></div>
     <div class="bottom-sheet" id="hint-sheet">
         <h3 style="margin-top:0; text-align:center;" id="hint-title">Подсказка</h3>
-        <div id="hint-text" style="line-height: 1.6; color: #444;"></div>
+        <div id="hint-text" style="line-height: 1.6; color: #444; font-size: 15px;"></div>
         <button class="btn" style="padding: 12px;" onclick="closeHint()">Понятно</button>
     </div>
 
     <script>
-        // --- ДАННЫЕ С РАБОЧИМИ КАРТИНКАМИ ---
-        
+        // --- ДАННЫЕ ЗАДАНИЙ И ТОВАРОВ ---
+
+        // 1. Поиск локаций (Part 1)
+        const locTasks = {
+            1: { target: "B1-02-05-A-01", hint: "<p><b>B1</b> — Бакалея.</p><p><b>02</b> — Ряд 2.</p><p><b>05</b> — Стеллаж 5.</p><p><b>A</b> — Нижняя полка.</p>" },
+            2: { target: "G1-02-03-D-02", hint: "<p><b>G</b> — ГМЗ (Гастроном).</p><p>❄️ <b>ВНИМАНИЕ:</b> Тут холодно!</p><p>Надень куртку перед тем, как идти в этот ряд.</p>" }
+        };
+
+        // 2. Простой заказ (Горошек) (Part 2)
         const trainingOrder = {
             id: "train_01",
             addr: { sec: "B1", row: "01", rack: "01", shelf: "B", cell: "02" },
             product: {
                 name: "Горошек Bonduelle консервированный, 425 мл",
                 barcode: "3083680048774", 
-                // Стабильная ссылка OpenFoodFacts
                 img: "https://static.openfoodfacts.org/images/products/308/368/103/5230/front_ru.10.400.jpg",
                 qty: 1
             }
         };
 
+        // 3. Сложный заказ (Бананы + Сметана) (Part 3)
         const complexOrderItems = [
             {
                 id: 1,
@@ -164,12 +189,11 @@
                 product: {
                     name: "Бананы (Весовые)",
                     barcode: "2001001",
-                    // Стабильная ссылка Wikipedia
                     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Banana-Single.jpg/400px-Banana-Single.jpg",
-                    qty: 2, 
-                    step: 1, 
+                    qty: 2, // 2 кг
+                    step: 1, // шаг сканирования 1
                     stepLabel: "шаг продукта-1",
-                    stepHint: "Обрати внимание: клиент заказал 2 кг, а фасовка по 1 кг. Тебе нужно взять 2 пакета по 1 кг."
+                    stepHint: "Обрати внимание что клиент заказал два килограмма и фасовка по одному киллограмму , тебе надо взять два пакета по килограмму"
                 }
             },
             {
@@ -178,56 +202,120 @@
                 product: {
                     name: "Сметана President 15%, 400 г",
                     barcode: "4870055001231",
-                    // Стабильная ссылка OpenFoodFacts
                     img: "https://static.openfoodfacts.org/images/products/487/005/500/1231/front_ru.3.400.jpg",
-                    qty: 1,
-                    step: 1
+                    qty: 1
                 }
             }
         ];
 
-        // --- СОСТОЯНИЕ ---
+        // --- СОСТОЯНИЕ ПРИЛОЖЕНИЯ ---
         let state = {
             screen: 'welcome',
-            orderType: null, 
+            orderType: null, // 'training' or 'complex'
             currentItemIndex: 0,
             pickedQty: 0
         };
 
-        // --- РЕНДЕР ---
+        // --- ШАБЛОНЫ ЭКРАНОВ ---
         
+        // 1. ПРИВЕТСТВИЕ
         function renderWelcome() {
             document.getElementById('main-content').innerHTML = `
                 <div class="screen active" style="text-align: center; margin-top: 30px;">
-                    <div style="font-size: 60px; margin-bottom: 20px;">📦</div>
-                    <h1>Сборка заказов</h1>
-                    <p>Сейчас мы потренируемся собирать реальные заказы.</p>
-                    
-                    <div class="card" style="text-align:left;">
-                        <b>Этап 1:</b> Простой заказ (1 товар)<br>
-                        <small style="color:#777">Изучим кнопки "Замена" и "Не найден"</small>
-                    </div>
-
-                    <div class="card" style="text-align:left;">
-                        <b>Этап 2:</b> Сложный заказ (2 товара)<br>
-                        <small style="color:#777">Весовой товар (2кг) + Штучный товар</small>
-                    </div>
-
-                    <button class="btn" onclick="startTrainingOrder()">Начать Этап 1 🚀</button>
+                    <div style="font-size: 60px; margin-bottom: 10px;">🍉</div>
+                    <h1>Привет, стажёр!</h1>
+                    <p>Добро пожаловать в команду.<br>Чтобы быстро собирать заказы, нужно понимать, как устроен наш склад.</p>
+                    <button class="btn" onclick="renderZones()">Начать обучение 🚀</button>
                 </div>
             `;
         }
 
-        function renderOrderScreen(item) {
+        // 2. ЗОНЫ
+        function renderZones() {
+            document.getElementById('main-content').innerHTML = `
+                <div class="screen active">
+                    <h1>Регионы склада</h1>
+                    <p>5 главных отделов хранения:</p>
+                    <div class="card"><div class="card-row"><div class="card-icon">🍝</div><div><b>B — Бакалея (Food)</b><br><span style="font-size:12px; color:#777;">Крупы, консервы</span></div></div></div>
+                    <div class="card"><div class="card-row"><div class="card-icon">🧴</div><div><b>M — Химия (Non Food)</b><br><span style="font-size:12px; color:#777;">Бытовая химия</span></div></div></div>
+                    <div class="card"><div class="card-row"><div class="card-icon">🍉</div><div><b>F — Фреш</b><br><span style="font-size:12px; color:#777;">Свежие фрукты</span></div></div></div>
+                    <div class="card"><div class="card-row"><div class="card-icon">🍦</div><div><b>G — ГМЗ</b><br><span style="font-size:12px; color:#777;">Молочка, заморозка</span></div></div></div>
+                    <div class="card"><div class="card-row"><div class="card-icon">💊</div><div><b>PH — Аптека</b><br><span style="font-size:12px; color:#777;">Лекарства</span></div></div></div>
+                    <button class="btn" onclick="renderAddress()">Всё понятно 👉</button>
+                </div>
+            `;
+        }
+
+        // 3. АДРЕС (ГОРОД)
+        function renderAddress() {
+            document.getElementById('main-content').innerHTML = `
+                <div class="screen active">
+                    <h1>Адрес ячейки</h1>
+                    <p>Представь, что ищешь друга в городе:</p>
+                    <div class="target-box" style="padding:10px;"><span style="font-family:monospace; font-weight:bold; font-size:20px;">B1-02-05-A-01</span></div>
+                    <div class="card">
+                        <div class="card-row"><span class="addr-badge" style="background:#FF5722;">B1</span><div><b>Город</b> (Отдел)</div></div>
+                        <div class="card-row"><span class="addr-badge" style="background:#2196F3;">02</span><div><b>Улица</b> (Ряд)</div></div>
+                        <div class="card-row"><span class="addr-badge" style="background:#9C27B0;">05</span><div><b>Дом</b> (Стеллаж)</div></div>
+                        <div class="card-row"><span class="addr-badge" style="background:#E91E63;">A</span><div><b>Этаж</b> (Полка)</div></div>
+                        <div class="card-row"><span class="addr-badge" style="background:var(--arbuz-green);">01</span><div><b>Квартира</b> (Позиция)</div></div>
+                    </div>
+                    <button class="btn" onclick="startLocTask(1)">Запомнил, к практике! 🔥</button>
+                </div>
+            `;
+        }
+
+        // 4. ПОИСК ЛОКАЦИИ (ЗАДАНИЕ 1 и 2)
+        function startLocTask(num) {
+            state.screen = 'locTask' + num;
+            const task = locTasks[num];
+            
+            document.getElementById('main-content').innerHTML = `
+                <div class="screen active">
+                    <h1>Задание №${num}</h1>
+                    <p>${num === 1 ? 'Найди адрес и сканируй:' : 'Теперь найди холодную зону:'}</p>
+                    <div class="target-box" style="${num === 2 ? 'border-color:#2196F3; background:#E3F2FD;' : ''}">
+                        <div style="font-size:12px; color:${num === 2 ? '#1565C0' : '#E65100'}; font-weight:bold; margin-bottom:5px;">ЦЕЛЬ</div>
+                        <div class="target-val">${task.target}</div>
+                    </div>
+                    <div class="hint-btn" onclick="showHint('${task.hint}')">🤔 Подсказка</div>
+                    <div style="margin-top:10px;">
+                        <input type="text" id="barcode-input" class="scan-input" placeholder="Сканируй ячейку..." autocomplete="off">
+                    </div>
+                    <button class="dev-btn" onclick="simulateScan('${task.target}')">[DEV: OK]</button>
+                </div>
+            `;
+            initInput();
+        }
+
+        // 5. УСПЕХ ОНБОРДИНГА
+        function renderOnboardingSuccess() {
+            document.getElementById('main-content').innerHTML = `
+                <div class="screen active" style="text-align: center; justify-content:center; height:100%;">
+                    <div style="font-size: 70px; margin-bottom: 20px;">🎓</div>
+                    <h1 style="color: var(--arbuz-green);">Первый этап пройден!</h1>
+                    <p>Ты изучил зоны и научился находить ячейки.</p>
+                    <div class="card" style="margin-top:20px; background:#E8F5E9;">
+                        <p style="margin:0; color:#2e7d32;"><b>Представь:</b><br>Ты получил первый реальный заказ на сборку.</p>
+                    </div>
+                    <button class="btn" style="background:#00A046; color:white; margin-top:30px;" onclick="startTrainingOrder()">Начать отбор 📦</button>
+                </div>
+            `;
+        }
+
+        // 6. ЭКРАН СБОРКИ (WMS)
+        function renderWmsScreen(item) {
             const isTraining = state.orderType === 'training';
+            // Синий вопросик для обучения кнопкам
             const hintMarker = isTraining ? `<div class="hint-marker">?</div>` : ``;
 
+            // Шаг товара
             let stepHtml = '';
             if (item.product.stepLabel) {
                 stepHtml = `
                     <div style="font-size:13px; color:#1976D2; margin-top:5px; font-weight:600; display:flex; align-items:center; gap:6px;">
                         ${item.product.stepLabel} 
-                        <div class="step-help-icon" onclick="showProductHint('${item.product.stepHint}')">?</div>
+                        <div class="step-help-icon" onclick="showHint('${item.product.stepHint}')">?</div>
                     </div>
                 `;
             }
@@ -253,7 +341,7 @@
                                 ${item.product.qty > 1 && !item.product.stepLabel ? '<div style="color:#E65100; font-size:12px; font-weight:bold; margin-top:4px;">⚠️ Сканируй каждую единицу!</div>' : ''}
                             </div>
                             <div class="prod-img-box">
-                                <img src="${item.product.img}" class="prod-img" alt="Product">
+                                <img src="${item.product.img}" class="prod-img" alt="Фото">
                             </div>
                         </div>
 
@@ -299,17 +387,11 @@
                     <button class="dev-btn" onclick="simulateScan('${item.product.barcode}')">[DEV: Correct Scan]</button>
                 </div>
             `;
-            
-            setTimeout(() => {
-                const inp = document.getElementById('barcode-input');
-                if(inp) {
-                    inp.focus();
-                    inp.addEventListener('keydown', handleEnter);
-                }
-            }, 300);
+            initInput();
         }
 
-        function renderSuccess(msg, btnText, action) {
+        // 7. ЭКРАНЫ УСПЕХА
+        function renderSimpleSuccess(msg, btnText, action) {
             document.getElementById('main-content').innerHTML = `
                 <div class="screen active" style="text-align: center; justify-content:center; height:100%;">
                     <div style="font-size: 80px; margin-bottom: 20px;">✅</div>
@@ -320,20 +402,32 @@
             `;
         }
 
-        // --- ЛОГИКА ---
+        // --- ЛОГИКА ПРИЛОЖЕНИЯ ---
 
+        function initInput() {
+            setTimeout(() => {
+                const inp = document.getElementById('barcode-input');
+                if(inp) {
+                    inp.focus();
+                    inp.addEventListener('keydown', handleEnter);
+                }
+            }, 300);
+        }
+
+        // Старт простого заказа (Горошек)
         function startTrainingOrder() {
             state.orderType = 'training';
             state.currentItemIndex = 0;
             state.pickedQty = 0;
-            renderOrderScreen(trainingOrder);
+            renderWmsScreen(trainingOrder);
         }
 
+        // Старт сложного заказа (Бананы + Сметана)
         function startComplexOrder() {
             state.orderType = 'complex';
             state.currentItemIndex = 0;
             state.pickedQty = 0;
-            renderOrderScreen(complexOrderItems[0]);
+            renderWmsScreen(complexOrderItems[0]);
         }
 
         function handleEnter(e) {
@@ -342,18 +436,33 @@
 
         function checkScan(code) {
             const input = document.getElementById('barcode-input');
+            code = code.trim();
+
+            // Логика Части 1 (Поиск локаций)
+            if (state.screen === 'locTask1') {
+                if (code === locTasks[1].target) { alert("Верно!"); startLocTask(2); }
+                else { alert("Ошибка! Ищем: " + locTasks[1].target); input.value=""; }
+                return;
+            }
+            if (state.screen === 'locTask2') {
+                if (code === locTasks[2].target) { renderOnboardingSuccess(); }
+                else { alert("Ошибка! Ищем: " + locTasks[2].target); input.value=""; }
+                return;
+            }
+
+            // Логика Части 2 и 3 (Сборка товаров)
             let currentItem;
-            
             if (state.orderType === 'training') currentItem = trainingOrder;
             else currentItem = complexOrderItems[state.currentItemIndex];
 
-            if (code.trim() === currentItem.product.barcode) {
-                // Успех
+            if (code === currentItem.product.barcode) {
+                // Успешный скан
                 state.pickedQty += 1;
                 document.getElementById('picked-val').innerText = state.pickedQty;
                 input.value = "";
                 input.focus();
 
+                // Если собрали нужное количество
                 if (state.pickedQty >= currentItem.product.qty) {
                     document.getElementById('qty-box-bg').classList.add('done');
                     const btn = document.getElementById('btn-confirm');
@@ -371,49 +480,45 @@
         function confirmItem() {
             const btn = document.getElementById('btn-confirm');
             if (!btn.classList.contains('ready')) {
-                alert("Сначала отсканируйте все товары!");
+                alert("Сначала отсканируйте нужное количество!");
                 return;
             }
 
             if (state.orderType === 'training') {
-                renderSuccess("Вы освоили кнопки и собрали простой заказ.", "Перейти к Сложному заказу 🔥", "startComplexOrder()");
+                renderSimpleSuccess("Вы освоили кнопки и собрали простой заказ.", "Перейти к Сложному заказу 🔥", "startComplexOrder()");
             } 
             else if (state.orderType === 'complex') {
                 if (state.currentItemIndex >= complexOrderItems.length - 1) {
-                    renderSuccess("Сложный заказ из 2 позиций собран!", "Закончить смену 🏠", "location.reload()");
+                    renderSimpleSuccess("Сложный заказ из 2 позиций собран!", "Закончить смену 🏠", "location.reload()");
                 } else {
                     state.currentItemIndex++;
                     state.pickedQty = 0;
                     alert("Позиция принята! Следующий товар...");
-                    renderOrderScreen(complexOrderItems[state.currentItemIndex]);
+                    renderWmsScreen(complexOrderItems[state.currentItemIndex]);
                 }
             }
         }
 
-        function showReplaceHint() {
-            document.getElementById('hint-title').innerText = "Кнопка «Заменить»";
-            document.getElementById('hint-text').innerHTML = 
-                "Нажимай, если:<br>1. Пришел к ячейке.<br>2. Товара нет.<br>3. Кнопка <b>АКТИВНА</b>.<br><br>👉 Нужно подобрать аналог и сообщить супервайзеру.";
+        // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
+        function showHint(htmlText) {
+            document.getElementById('hint-title').innerText = "Подсказка";
+            document.getElementById('hint-text').innerHTML = htmlText;
             openOverlay();
+        }
+
+        function showReplaceHint() {
+            showHint("Нажимай, если:<br>1. Пришел к ячейке.<br>2. Товара нет.<br>3. Кнопка <b>АКТИВНА</b>.<br><br>👉 Нужно подобрать аналог и сообщить супервайзеру.");
         }
 
         function showNotFoundHint() {
-            document.getElementById('hint-title').innerText = "Кнопка «Не найден»";
-            document.getElementById('hint-text').innerHTML = 
-                "Нажимай, если:<br>1. Товара нет.<br>2. «Заменить» <b>НЕ АКТИВНА</b>.<br><br>👉 Значит клиент запретил замену. Просто жми крестик.";
-            openOverlay();
-        }
-
-        function showProductHint(text) {
-            document.getElementById('hint-title').innerText = "Особенность товара";
-            document.getElementById('hint-text').innerText = text;
-            openOverlay();
+            showHint("Нажимай, если:<br>1. Товара нет.<br>2. «Заменить» <b>НЕ АКТИВНА</b>.<br><br>👉 Значит клиент запретил замену. Просто жми крестик.");
         }
 
         function openOverlay() { document.getElementById('overlay').style.display = 'block'; setTimeout(() => document.getElementById('hint-sheet').classList.add('active'), 10); }
         function closeHint() { document.getElementById('hint-sheet').classList.remove('active'); setTimeout(() => document.getElementById('overlay').style.display = 'none', 300); }
         function simulateScan(code) { checkScan(code); }
 
+        // ЗАПУСК
         renderWelcome();
         setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), 1000);
 
